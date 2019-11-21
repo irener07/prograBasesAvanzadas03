@@ -9,7 +9,7 @@ router.get('/supermarkets/createSupermarket', (req, res) => {
 });
 
 
-//                      Creation of new airport
+
 router.post('/supermarkets/createSupermarket', async (req, res) => {
     const {idSuperMarket, name, description, address, longitude, latitude, image, telephone, rating, schedule, website, products}= req.body;
     const errors=[];
@@ -37,3 +37,5 @@ router.get('/supermarkets', async (req, res) => {
     const supermarketsFound = await supermarkets.find();
     res.render('supermarkets/supermarketsModule', {supermarketsFound});
 });
+
+module.exports = router;
