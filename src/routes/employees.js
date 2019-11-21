@@ -41,6 +41,10 @@ router.get('/employees/registerSite', (req, res) => {
     res.render('employees/registerSite');
 });
 
+router.get('/employees/registerProducts', (req, res) => {
+    res.render('employees/registerProducts');
+});
+
 
 
 module.exports = router;
