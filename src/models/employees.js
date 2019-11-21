@@ -17,18 +17,6 @@ const employeesSchema = new Schema({
         type: String,
         required: true
     },
-    type: {
-        type: String,
-        required: true
-    },
-    hiringDate: {
-        type: Date,
-        default: Date.now
-    },
-    jobArea: {
-        type: Array,
-        required: true
-    },
     email: {
         type: String,
         required: true
