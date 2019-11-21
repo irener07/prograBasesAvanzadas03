@@ -10,22 +10,13 @@ router.get('/clients/signUpClients', (req, res) => {
 });
 
 router.post('/clients/signUpClients', async (req, res) => {
-    const {id, firstName, lastName, birthDate, nationality, country, state, address, email, password, telephone}= req.body;
+    const {id, firstName, lastName, birthDate, email, password, telephone}= req.body;
     const errors=[];
-    if(nationality==-1){
-        errors.push({text: 'Please, Select Nationality'});
-    }
-    if(country==-1){
-        errors.push({text: 'Please, Select Country'});
-    }
-    if(!state || state==-1){
-        errors.push({text: 'Please, Select State'});
-    }
-    if(id=='' || firstName=='' || lastName=='' || address=='' || email=='' || password=='' || telephone.length==0){
+    if(id=='' || firstName=='' || lastName=='' || email=='' || password=='' || telephone==''){
         errors.push({text: 'Please, Insert the Data'});
     }
     if(errors.length>0){
-        res.render('clients/signUpClients',{errors, id, firstName, lastName, birthDate, nationality, country, state, address, email, password, telephone});
+        res.render('clients/signUpClients',{errors, id, firstName, lastName, birthDate, email, password, telephone});
     }
     else{
         const idC = await clients.findOne({id: id});
@@ -34,7 +25,7 @@ router.post('/clients/signUpClients', async (req, res) => {
             req.flash('error_msg', 'The ID or Email is Already Registered');
             res.redirect('/clients/signUpClients');
         }
-        const newClient = new clients({id, firstName, lastName, birthDate, nationality, country, state, address, email, password, telephone});
+        const newClient = new clients({id, firstName, lastName, birthDate, email, password, telephone});
         newClient.password = await newClient.encryptPassword(password);
         await newClient.save();
         req.flash('success_msg', 'Successful Registration');

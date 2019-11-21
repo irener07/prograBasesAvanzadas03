@@ -10,7 +10,6 @@ const dataUserConnected = require('../configuration/connectDB');
 router.get('/', (req, res) => {
     dataUserConnected.idUserConnected='';
     dataUserConnected.typeUser='';
-    dataUserConnected.idFlight='';
     res.render('index');
 });
 

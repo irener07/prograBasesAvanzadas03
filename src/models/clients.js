@@ -3,14 +3,6 @@ const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
 mongoose.set('useCreateIndex', true);
 
-const clientPhoneNumbersSchema = new Schema({
-    telephones: {
-        type: Array,
-        required: true
-    }
-});
-
-module.exports = mongoose.model("clientsPhoneNumbers",clientPhoneNumbersSchema);
 
 const clientsSchema = new Schema({
     id: {
@@ -30,22 +22,6 @@ const clientsSchema = new Schema({
         type: Date,
         required: true
     },
-    nationality: {
-        type: String,
-        required: true, 
-    },
-    country: {
-        type: String,
-        required: true, 
-    },
-    state: {
-        type: String,
-        required: true, 
-    },
-    address: {
-        type: String,
-        required: true, 
-    },
     email: {
         type: String,
         required: true, 
@@ -55,7 +31,7 @@ const clientsSchema = new Schema({
         required: true, 
     },
     telephone: {
-        type: Array,
+        type: Number,
         required: true,
     }
 });

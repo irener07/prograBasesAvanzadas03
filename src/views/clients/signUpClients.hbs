@@ -1,0 +1,53 @@
+<div class="row">
+    <div class="col-md-4 mx-auto">
+        <div class="card">
+            <div class="card-header">
+               <h1>Clients Register</h1> 
+            </div>
+            <div class="card-body">
+                <form action="/clients/signUpClients" method='POST'>
+                    <div class="form-group">
+                        <label>ID Client</label>
+                        <input type="number" class="form-control" name="id" placeholder="ID Client" value={{id}}>
+                    </div>
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" class="form-control" name="firstName" placeholder="First Name" value={{firstName}}>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" class="form-control" name="lastName" placeholder="Last Name" value={{lastName}}>
+                    </div>
+                    <div class="form-group">
+                        <label>Birth Date</label>
+                        <input type="date" class="form-control" name="birthDate" value={{birthDate}}>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control" name="email" placeholder="Email" value={{email}}>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" class="form-control" name="password" placeholder="Password" value={{password}}>
+                    </div>
+                    <div class="form-group">
+                        <label>Telephone</label>
+                        <input type="number" class="form-control"  name="telephone" placeholder="Telephone" min="1" max="99999999"step="1" value={{telephone}}>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block">
+                            Sign Up Client
+                        </button>
+                    </div>
+                </form>
+                <form action="/" method='GET'>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block">
+                            Back
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
