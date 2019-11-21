@@ -37,6 +37,10 @@ router.post('/employees/signUpEmployees', async (req, res) => {
         } 
 });
 
+router.get('/employees/registerSite', (req, res) => {
+    res.render('employees/registerSite');
+});
+
 
 
 module.exports = router;
