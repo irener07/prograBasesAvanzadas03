@@ -30,7 +30,7 @@ router.post('/', async (req, res) => {
         if(match){
           dataUserConnected.typeUser="Client";
           dataUserConnected.idUserConnected=user.id;
-          res.redirect('clients/mainModule');
+          res.redirect('clients/clientsModule');
         } else{
           errors.push({text: 'The Password or Email or Type are Incorrect.'});
           res.render('index',{errors, email, password});
@@ -50,7 +50,7 @@ router.post('/', async (req, res) => {
           if(type!="Manager"){
             dataUserConnected.typeUser="Employee";
             dataUserConnected.idUserConnected=user.id;
-            res.redirect('employees/moduleEmployees');
+            res.redirect('employees/employeesModule');
           }
           else{
             errors.push({text: 'The Type are Incorrect.'});
@@ -61,51 +61,9 @@ router.post('/', async (req, res) => {
         } 
       }
     }
-    if(typeUser=="Manager"){
-      const user = await employee.findOne({email: email});
-      if(user){
-        const match = await user.matchPassword(password);
-        if(match){
-          const type= user.type;
-          if(type=="Manager"){
-            dataUserConnected.typeUser="Manager";
-            dataUserConnected.idUserConnected=user.id;
-            res.redirect('employees/moduleManagers');
-          }
-          else{
-            errors.push({text: 'The Type are Incorrect.'});
-            res.render('index',{errors, email, password});}
-        } else{
-          errors.push({text: 'The Password or Email or Type are Incorrect.'});
-          res.render('index',{errors, email, password});
-        } 
-      }
-      else{
-        errors.push({text: 'The Type are Incorrect.'});
-        res.render('index',{errors, email, password});
-      }
-    }
   }
 });
 
-router.get('/airports/new', (req, res) => {
-    res.render('airports/new-airport');
-});
-router.get('/employees/signUpEmployees', (req, res) => {
-  res.render('employees/signUpEmployees');
-});
-  
-  router.get('/airports/all', (req, res) => {
-    res.render('airports/all-airports');
-  });
-
-router.get('/airlines/createAirline', (req, res) => {
-    res.render('airlines/createAirline');
-});
-
-  router.get('/employees/moduleEmployees', (req, res) => {
-    res.render('employees/moduleEmployees');
-  });
   
 
 module.exports = router;
