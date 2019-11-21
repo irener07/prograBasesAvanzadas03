@@ -1,5 +1,5 @@
 {
-    "mongoURI" : "mongodb+srv://appUser:Abcd1234@cluster0-tjh3w.mongodb.net/test?retryWrites=true&w=majority",
+    "mongoURI" : "mongodb+srv://appUser:Abcd1234@cluster0-0jqkg.mongodb.net/TECMarket?retryWrites=true&w=majority",
     "idUserConnected" : "",
     "typeUser": ""
 }
