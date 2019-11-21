@@ -1,0 +1,5 @@
+{
+    "mongoURI" : "mongodb+srv://appUser:Abcd1234@cluster0-tjh3w.mongodb.net/test?retryWrites=true&w=majority",
+    "idUserConnected" : "",
+    "typeUser": ""
+}
