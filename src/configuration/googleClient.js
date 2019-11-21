@@ -19,6 +19,41 @@ module.exports = {
                 console.log(suggestions);
             }
         }
-     );
-  }
+        );
+    },
+
+    searchPlaceById: function (address){
+        googleMapsClient.findPlace({
+            input: address,
+            inputtype: 'textquery',
+        }, function(err, response) {
+            if (!err) {
+                //return response.json.candidates[0];
+                console.log(response.json.candidates[0]);
+            }
+        }
+        );
+    },
+
+    placeDetailsById: function (place_id){
+        googleMapsClient.place({
+            placeid: place_id,
+        }, function(err, response) {
+            if (!err) {
+                console.log(response.json.result);
+            }
+        }
+        );
+    },
+
+    placeDetailsByCoordinates: function(LatLng){
+        googleMapsClient.reverseGeocode({
+            latlng: LatLng
+        }, function(err, response) {
+            if (!err) {
+                console.log(response.json.results);
+            }
+        }
+        );
+    }
 };
