@@ -1,0 +1,49 @@
+<div class="col-md-4 mx-auto">
+    <div class="card">
+        <div class="card-header">
+            <h3>Register Supermarket</h3>
+        </div>
+        <div class="card-body">
+            <form action="/clients/modify-client/{{client._id}}?_method=PUT" method="POST">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="idSuperMarket" placeholder="ID Supermarket" value={{client.idSuperMarket}} readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="name" placeholder="Name" value={{client.name}} readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="description" placeholder="Description">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="address" value={{client.address}}>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="latitude" id="latitude" value={{client.latitude}}>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="longitude" placeholder="Longitude" value={{client.longitude}}>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="typeSupermarket" placeholder="typeSupermarket" value={{client.typeSupermarket}}>
+                    </div>
+                    <div class="form-group">
+                        <input type="image" class="form-control" name="image" width="48" height="48" value={{client.image}}>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="telephone" placeholder="Telephone" value={{client.telephone}}>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="rating" placeholder="Rating" value={{client.rating}}>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="schedule" placeholder="Schedule" value={{client.schedule}}>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block">
+                            Save
+                        </button>
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,44 +1,84 @@
-<div class="col-md-4 mx-auto">
+<div class="row">
     <div class="card">
-    <div class="card-header">
-        <h3>Create Super Market</h3>
-    </div>
-
-    <div class="card-body">
-            <form action="/supermarkets/createSupermarket" method="POST">
-            <div class="form-group">
-                ID:
-                    <input type="" name="idSuperMarket"><br>
-                Name:
-                    <input type="text" name="name"></br> 
-                Description: 
-                    <textarea name="description"></textarea></br>
-                adress: 
-                    <input type="text" name="adress"></br>
-                longitude: 
-                    <input type="number" name="longitude"></br>
-                latitude:
-                    <input type="number" name="latitude"></br> 
-                image: 
-                    <input type="text" name="image"></br>
-                telephone: 
-                    <input type="number" name="telephone"></br>
-                rating:
-                    <input type="number" name="rating"></br> 
-                schedule: 
-                    <textarea name="schedule"></textarea></br>
-                website: 
-                    <input type="text" name="website"></br>
-                products: 
-                    <input type="text" class="form-control"  name="products" placeholder="Products" multiple="multiple" value={{products}}>
-
-            </div>
-            <div class="form-group">
-                <button class="bton btn-primary btn-block" type="submit">
-                    Save
-                </button>
-            </div>
+        <div class="card-header">
+            <h1>Register Supermarkets</h1> 
+        </div>
+        <div class="card-body">
+            <form action="/supermarkets/createSupermarket" method='POST'> 
+                <div class="form-group">
+                    <label>Latitude</label>
+                    <input type="number" name="latitude" id="latitude" placeholder="Latitude">
+                </div>
+                <div class="form-group">
+                    <label>Longitude</label>
+                    <input type="number" name="longitude" id="longitude" placeholder="Longitude">
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" name="address" id="address" placeholder="Address">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        Search
+                    </button>
+                </div>
             </form>
         </div>
     </div>
+</div>
+
+
+{{#if supermarketsFound}}
+<div class="row">
+
+    <div class="card-header">
+        <h1>Data Supermarket</h1> 
+    </div>
+<table class="egt table {
+    border-collapse: separate;
+    border-spacing: 5px;
+    background: #000 url("gradient.gif") bottom left repeat-x;
+    color: #fff;
+ }">  
+    <tr>
+
+    <th scope="row">ID</th>
+    <th>Name</th>
+    <th>Types</th>
+    <th>Address</th>
+    <th>Latitude</th>
+    <th>Longitude</th>
+    <th>Image</th>
+    <th>Telephone</th>
+    <th>Rating</th>
+    <th>Schedule</th>
+    <th>Website</th>
+    <th></th>
+
+
+<tr>
+    {{#each supermarketsFound}}
+    <th>{{idSuperMarket}}</th>
+    <td>{{name}}</td>
+    <td>{{typeSupermarket}}</td>
+    <td>{{address}}</td>
+    <td>{{latitude}}</td>
+    <td>{{longitude}}</td>
+    <td>{{image}}</td>
+    <td>{{telephone}}</td>
+    <td>{{rating}}</td>
+    <td>{{schedule}}</td>
+    <td>{{website}}</td>
+    <td>
+        <form action="/supermarkets/registerSupermarket/{{idSuperMarket}}" method="POST">
+                <button class="btn btn-success btn-block btn-sm" type="submit">
+                    Register
+                </button> 
+        </form>
+    </td>
+</tr>
+    {{/each}}
+</table>
+
+    {{/if}}
 </div>

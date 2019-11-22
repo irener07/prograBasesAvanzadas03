@@ -4,7 +4,7 @@ mongoose.set('useCreateIndex', true);
 
 const supermarketsSchema = new Schema({
     idSuperMarket: {
-        type: Number,
+        type: String,
         required: true,
         unique: true
     },
@@ -16,22 +16,25 @@ const supermarketsSchema = new Schema({
         type: String,
         required: true
     },
-    adress: {
+    address: {
         type: String,
-        required: true
-    },
-    longitude: {
-        type: Number,
         required: true
     },
     latitude: {
         type: Number,
         required: true
     },
+    longitude: {
+        type: Number,
+        required: true
+    },
+    typeSupermarket: {
+        type: Array,
+        required: true
+    },
     image: {
-        type: String,
-        required: false,
-        data: Buffer
+        type: Object,
+        required: false
     },
     telephone: {
         type: Number,

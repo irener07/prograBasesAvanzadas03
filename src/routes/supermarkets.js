@@ -11,14 +11,20 @@ router.get('/supermarkets/createSupermarket', (req, res) => {
 
 
 router.post('/supermarkets/createSupermarket', async (req, res) => {
-    const {idSuperMarket, name, description, address, longitude, latitude, image, telephone, rating, schedule, website, products}= req.body;
+    const {latitude, longitude, address}= req.body;
     const errors=[];
 
-    if(idSuperMarket=='' || name=='' || description=='' || address=='' || longitude=='' || latitude==''|| telephone=='' || rating==''|| schedule==''|| website==''){
+    if(latitude=='' && longitude=='' && address==''){
+        errors.push({text: 'Please, Insert the Data'});
+    }
+    if(latitude!='' && longitude=='' && address==''){
+        errors.push({text: 'Please, Insert the Data'});
+    }
+    if(latitude=='' && longitude!='' && address==''){
         errors.push({text: 'Please, Insert the Data'});
     }
     if(errors.length>0){
-        res.render('supermarkets/createSupermarket',{idSuperMarket, name, description, address, longitude, latitude, image, telephone, rating, schedule, website, products});
+        res.render('supermarkets/createSupermarket',{latitude, longitude, address});
     }
     else{
         const idC = await supermarkets.findOne({id: id});
@@ -36,6 +42,11 @@ router.post('/supermarkets/createSupermarket', async (req, res) => {
 router.get('/supermarkets', async (req, res) => {
     const supermarketsFound = await supermarkets.find();
     res.render('supermarkets/supermarketsModule', {supermarketsFound});
+});
+
+router.get('/supermarkets/registerSupermarket/:id', async (req, res) => {
+    const employeeFound = req.body;
+    res.render('employees/editEmployees', {employeeFound});
 });
 
 module.exports = router;
