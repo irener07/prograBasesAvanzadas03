@@ -22,17 +22,27 @@ exports.autocompleteQuery = async function (queryText){
 };
 
 exports.placeDetailsById = async function (place_id) {
-        var resultInfo = new Array();
+        var resultInfo = {placeid,
+                name,
+                formatted_address,
+                lat,
+                lng,
+                types,
+                photoUrl,
+                international_phone_number,
+                rating,
+                weekday_text,
+                website};
         googleMapsClient.place({
             placeid: place_id,
         }, function(err, response) {
             if (!err) {
                 var result = response.json.result;
-                resultInfo.push(result.place_id);
-                resultInfo.push(result.name);
-                resultInfo.push(result.formatted_address);
-                resultInfo.push(result.geometry.location.lat);
-                resultInfo.push(result.geometry.location.lng);
+                resultInfo.placeid= result.place_id;
+                resultInfo.name = result.name;
+                resultInfo.formatted_address = result.formatted_address;
+                resultInfo.lat = result.geometry.location.lat;
+                resultInfo.lng = result.geometry.location.lng;
                 //Access Photo
                 var photoObj = result.photos[0];
                 googleMapsClient.placesPhoto({
@@ -42,15 +52,15 @@ exports.placeDetailsById = async function (place_id) {
                 }, (err, responsePhoto) =>{
                     if(!err){
                         var photoUrl = responsePhoto.connection.parser.outgoing.res.requestUrl;
-                        resultInfo.push(photoUrl);
+                        resultInfo.photoUrl = photoUrl;
                         console.log(resultInfo);
                         return resultInfo;
                     }
                 }
                 );
-                resultInfo.push(result.international_phone_number);
-                resultInfo.push(result.opening_hours.weekday_text);
-                resultInfo.push(result.website);
+                resultInfo.international_phone_number= result.international_phone_number;
+                resultInfo.weekday_text = result.opening_hours.weekday_text;
+                resultInfo.website = result.website;
             }
         }
         );
