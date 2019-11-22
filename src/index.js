@@ -11,7 +11,6 @@ const bodyParser = require('body-parser');
 const bodyParserJSON = bodyParser.json();
 const bodyParserURLEncoded = bodyParser.urlencoded({extended: true});
 const flash = require('connect-flash');
-const googleClient = require('./configuration/googleClient');
 
 module.exports = router;
 
@@ -52,7 +51,4 @@ app.use(require('./routes/supermarkets'));
 app.use(express.static(__dirname + '/public'));
 app.use(router);
 app.listen(config.PORT, ()=> console.log(`Server on port ${config.PORT}`));
-//googleClient.placeDetailsByCoordinates([9.8497821,-83.9489179]);
-//googleClient.searchPlaceByAddress("Walmart Paraiso");
-//googleClient.autocompleteQuery("Walmart");
 connectDb();

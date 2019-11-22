@@ -63,7 +63,7 @@ exports.searchPlaceByAddress = async function (address){
         }, async function(err, response) {
             if (!err) {
                 const placeId = response.json.candidates[0].place_id;
-                var resultInfo = await exports.placeDetailsById(placeId);
+                return exports.placeDetailsById(placeId);
             }
         }
         );
@@ -81,7 +81,7 @@ exports.placeDetailsByCoordinates = function(LatLng){
                     for(var j=0;j<=placeFoundTypes.length;j++){
                         if(placeFoundTypes[j]=='supermarket'){
                             var foundPlaceId = response.json.results[i].place_id;
-                            exports.placeDetailsById(foundPlaceId);
+                            return exports.placeDetailsById(foundPlaceId);
                         }
                     }
                 }

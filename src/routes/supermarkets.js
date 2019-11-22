@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const supermarkets = require('../models/supermarkets');
+const googleClient = require('../configuration/googleClient');
+
+
+//googleClient.searchPlaceByAddress("Walmart Paraiso");
+//googleClient.autocompleteQuery("Walmart");
 
 
 
@@ -27,15 +32,14 @@ router.post('/supermarkets/createSupermarket', async (req, res) => {
         res.render('supermarkets/createSupermarket',{latitude, longitude, address});
     }
     else{
-        const idC = await supermarkets.findOne({id: id});
-        if (idC){
-            req.flash('error_msg', 'The ID is Already Registered');
-            res.redirect('/supermarkets/createSupermarket');
+        if(latitude!='' && longitude!='' && address==''){
+            const supermarketsFound = googleClient.placeDetailsByCoordinates([latitude,longitude]);
+            res.render('supermarkets/createSupermarket',{supermarketsFound});
         }
-        const newSupermarket = new supermarkets({idSuperMarket, name, description, address, longitude, latitude, image, telephone, rating, schedule, website, products});
-        await newSupermarket.save();
-        req.flash('success_msg', 'Successful Registration');
-        res.redirect('/supermarkets');
+        if(latitude=='' && longitude=='' && address!=''){
+            const supermarketsFound = googleClient.searchPlaceByAddress(address);
+            res.render('supermarkets/createSupermarket',{supermarketsFound});
+        }
     }
 });
 
