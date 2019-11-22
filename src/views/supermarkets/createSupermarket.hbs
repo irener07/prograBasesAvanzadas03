@@ -7,11 +7,11 @@
             <form action="/supermarkets/createSupermarket" method='POST'> 
                 <div class="form-group">
                     <label>Latitude</label>
-                    <input type="number" name="latitude" id="latitude" placeholder="Latitude">
+                    <input type="text" name="latitude" id="latitude" placeholder="Latitude">
                 </div>
                 <div class="form-group">
                     <label>Longitude</label>
-                    <input type="number" name="longitude" id="longitude" placeholder="Longitude">
+                    <input type="text" name="longitude" id="longitude" placeholder="Longitude">
                 </div>
                 <div class="form-group">
                     <label>Address</label>
@@ -58,17 +58,17 @@
 
 <tr>
     {{!-- {{#each supermarketsFound}} --}}
-    <th>{{supermarketsFound}}</th>
-    <td>{{supermarketsFound}}</td>
-    <td>{{supermarketsFound}}</td>
-    <td>{{supermarketsFound}}</td>
-    <td>{{supermarketsFound}}</td>
-    <td>{{supermarketsFound}}</td>
-    <td>{{supermarketsFound}}</td>
-    <td>{{supermarketsFound}}</td>
-    <td>{{supermarketsFound}}</td>
-    <td>{{supermarketsFound}}</td>
-    <td>{{supermarketsFound}}</td>
+    <th>{{supermarketsFound.placeid}}</th>
+    <td>{{supermarketsFound.name}}</td>
+    <td>{{supermarketsFound.types}}</td>
+    <td>{{supermarketsFound.formatted_address}}</td>
+    <td>{{supermarketsFound.lat}}</td>
+    <td>{{supermarketsFound.lng}}</td>
+    <td>{{supermarketsFound.photoUrl}}</td>
+    <td>{{supermarketsFound.international_phone_number}}</td>
+    <td>{{supermarketsFound.rating}}</td>
+    <td>{{supermarketsFound.weekday_text}}</td>
+    <td>{{supermarketsFound.website}}</td>
     <td>
         <form action="/supermarkets/registerSupermarket/{{idSuperMarket}}" method="POST">
                 <button class="btn btn-success btn-block btn-sm" type="submit">

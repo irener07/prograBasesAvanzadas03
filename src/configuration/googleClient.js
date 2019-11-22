@@ -22,17 +22,7 @@ exports.autocompleteQuery = async function (queryText){
 };
 
 exports.placeDetailsById = async function (place_id) {
-        var resultInfo = {placeid,
-                name,
-                formatted_address,
-                lat,
-                lng,
-                types,
-                photoUrl,
-                international_phone_number,
-                rating,
-                weekday_text,
-                website};
+        var resultInfo = {};
         googleMapsClient.place({
             placeid: place_id,
         }, function(err, response) {

@@ -29,15 +29,16 @@ router.post('/supermarkets/createSupermarket', async (req, res) => {
         errors.push({text: 'Please, Insert the Data'});
     }
     if(errors.length>0){
-        res.render('supermarkets/createSupermarket',{latitude, longitude, address});
+        res.render('supermarkets/createSupermarket',{latitude, longitude, address, errors});
     }
     else{
         if(latitude!='' && longitude!='' && address==''){
-            const supermarketsFound = googleClient.placeDetailsByCoordinates([latitude,longitude]);
+            var supermarketsFound = await googleClient.placeDetailsByCoordinates([latitude,longitude]);
+            console.log(supermarketsFound);
             res.render('supermarkets/createSupermarket',{supermarketsFound});
         }
         if(latitude=='' && longitude=='' && address!=''){
-            const supermarketsFound = googleClient.searchPlaceByAddress(address);
+            var supermarketsFound = await googleClient.searchPlaceByAddress(address);
             res.render('supermarkets/createSupermarket',{supermarketsFound});
         }
     }
