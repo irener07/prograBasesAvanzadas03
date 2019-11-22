@@ -57,18 +57,18 @@
 
 
 <tr>
-    {{#each supermarketsFound}}
-    <th>{{supermarketsFound[0]}}</th>
-    <td>{{name}}</td>
-    <td>{{typeSupermarket}}</td>
-    <td>{{address}}</td>
-    <td>{{latitude}}</td>
-    <td>{{longitude}}</td>
-    <td>{{image}}</td>
-    <td>{{telephone}}</td>
-    <td>{{rating}}</td>
-    <td>{{schedule}}</td>
-    <td>{{website}}</td>
+    {{!-- {{#each supermarketsFound}} --}}
+    <th>{{supermarketsFound}}</th>
+    <td>{{supermarketsFound}}</td>
+    <td>{{supermarketsFound}}</td>
+    <td>{{supermarketsFound}}</td>
+    <td>{{supermarketsFound}}</td>
+    <td>{{supermarketsFound}}</td>
+    <td>{{supermarketsFound}}</td>
+    <td>{{supermarketsFound}}</td>
+    <td>{{supermarketsFound}}</td>
+    <td>{{supermarketsFound}}</td>
+    <td>{{supermarketsFound}}</td>
     <td>
         <form action="/supermarkets/registerSupermarket/{{idSuperMarket}}" method="POST">
                 <button class="btn btn-success btn-block btn-sm" type="submit">
@@ -77,7 +77,7 @@
         </form>
     </td>
 </tr>
-    {{/each}}
+    {{!-- {{/each}} --}}
 </table>
 
     {{/if}}
