@@ -22,58 +22,57 @@ exports.autocompleteQuery = async function (queryText){
 };
 
 exports.placeDetailsById = async function (place_id) {
-        var resultInfo = {};
         googleMapsClient.place({
             placeid: place_id,
-        }, function(err, response) {
+        },  async function (err, response) {
             if (!err) {
+                var resultInfo = {};
                 var result = response.json.result;
-                resultInfo.placeid= result.place_id;
+                resultInfo.placeid = result.place_id;
                 resultInfo.name = result.name;
                 resultInfo.formatted_address = result.formatted_address;
                 resultInfo.lat = result.geometry.location.lat;
                 resultInfo.lng = result.geometry.location.lng;
+                resultInfo.international_phone_number = result.international_phone_number;
+                resultInfo.weekday_text = result.opening_hours.weekday_text;
+                resultInfo.website = result.website;
                 //Access Photo
                 var photoObj = result.photos[0];
                 googleMapsClient.placesPhoto({
                     photoreference: photoObj.photo_reference,
                     maxheight: photoObj.height,
                     maxwidth: photoObj.width
-                }, (err, responsePhoto) =>{
-                    if(!err){
-                        var photoUrl = responsePhoto.connection.parser.outgoing.res.requestUrl;
-                        resultInfo.photoUrl = photoUrl;
+                }, async (err, responsePhoto) => {
+                    if (!err) {
+                        var photoUrl = await responsePhoto.connection.parser.outgoing.res.requestUrl;
+                        resultInfo.photoUrl = await photoUrl;
                         console.log(resultInfo);
-                        return resultInfo;
+                        
                     }
-                }
-                );
-                resultInfo.international_phone_number= result.international_phone_number;
-                resultInfo.weekday_text = result.opening_hours.weekday_text;
-                resultInfo.website = result.website;
+                });
+                return resultInfo;
             }
-        }
-        );
+        });
 };
 
-exports.searchPlaceByAddress = async function (address){
+exports.searchPlaceByAddress = async function (address,callback){
         googleMapsClient.findPlace({
             input: address,
             inputtype: 'textquery',
         }, async function(err, response) {
             if (!err) {
                 const placeId = response.json.candidates[0].place_id;
-                return exports.placeDetailsById(placeId);
+                console.log(exports.placeDetailsById(placeId));
             }
         }
         );
 };
 
 
-exports.placeDetailsByCoordinates = function(LatLng){
+exports.placeDetailsByCoordinates = async function(LatLng){
         googleMapsClient.reverseGeocode({
             latlng: LatLng
-        }, function(err, response) {
+        }, async function(err, response) {
             if (!err) {
                 var placesFound = response.json.results;
                 for(var i=0;i<=placesFound.length;i++){
@@ -81,7 +80,8 @@ exports.placeDetailsByCoordinates = function(LatLng){
                     for(var j=0;j<=placeFoundTypes.length;j++){
                         if(placeFoundTypes[j]=='supermarket'){
                             var foundPlaceId = response.json.results[i].place_id;
-                            return exports.placeDetailsById(foundPlaceId);
+                            const place = await exports.placeDetailsById(foundPlaceId);
+                            return place;
                         }
                     }
                 }

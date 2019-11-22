@@ -33,9 +33,9 @@ router.post('/supermarkets/createSupermarket', async (req, res) => {
     }
     else{
         if(latitude!='' && longitude!='' && address==''){
-            var supermarketsFound = await googleClient.placeDetailsByCoordinates([latitude,longitude]);
-            console.log(supermarketsFound);
+            const supermarketsFound = await googleClient.placeDetailsByCoordinates([latitude,longitude]);
             res.render('supermarkets/createSupermarket',{supermarketsFound});
+            console.log(supermarketsFound);
         }
         if(latitude=='' && longitude=='' && address!=''){
             var supermarketsFound = await googleClient.searchPlaceByAddress(address);
