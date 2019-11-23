@@ -5,6 +5,7 @@ var googleMapsClient = require('@google/maps').createClient({
 
 var resultInfo = {};
 var suggestions = {};
+var nearByPlaces = [];
 exports.autocompleteQuery = async function (queryText){
     var resultSuggestions = await googleMapsClient.placesQueryAutoComplete({input: queryText}).asPromise();
     var predictions = resultSuggestions.json.predictions;
@@ -58,4 +59,33 @@ exports.placeDetailsByCoordinates = async function(LatLng){
             }
         }
     }
+};
+
+exports.nearbyPlaces = async function(placeLatLng,placeRadius,types){
+    nearByPlaces = [];
+    var resultNearByPlaces = await googleMapsClient.placesNearby({
+        location: placeLatLng,
+        radius: placeRadius,
+    }).asPromise();
+    var results = resultNearByPlaces.json.results;
+    for (var i=0;i<results.length;i++){
+        var place = {};
+        for (var j=0;j<results[i].types.length;j++){
+            if (results[i].types[j] in types){
+                var placeId = results[i].place_id;
+                await exports.placeDetailsById(placeId);
+                console.log(resultInfo);
+                place.place_id = resultInfo.place_id;
+                place.international_phone_number = resultInfo.international_phone_number;
+                place.rating = resultInfo.rating;
+                place.weekday_text = resultInfo.weekday_text;
+                place.website = resultInfo.website;
+                place.PhotoUrl = resultInfo.PhotoUrl;
+                nearByPlaces.push(place);
+            }
+        }
+
+    }
+    return nearByPlaces;    
+
 };
