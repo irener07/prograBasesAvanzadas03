@@ -6,6 +6,7 @@ const session = require('express-session');
 const app = express();
 const router = express.Router();
 const connectDb = require('./configuration/server');
+const connectNeo = require('./configuration/connectNeo');
 const config = require('./configuration/connectDB');
 const bodyParser = require('body-parser');
 const bodyParserJSON = bodyParser.json();
@@ -18,6 +19,7 @@ module.exports = router;
 app.use(bodyParserJSON);
 app.use(bodyParserURLEncoded);
 
+connectNeo();
 
 app.set('views', path.join(__dirname, 'views'));
 app.engine('.hbs', exphbs({
