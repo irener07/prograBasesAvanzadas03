@@ -71,20 +71,40 @@ exports.nearbyPlaces = async function(placeLatLng,placeRadius,types){
     for (var i=0;i<results.length;i++){
         var place = {};
         for (var j=0;j<results[i].types.length;j++){
-            if (results[i].types[j] in types){
-                var placeId = results[i].place_id;
-                await exports.placeDetailsById(placeId);
-                console.log(resultInfo);
-                place.place_id = resultInfo.place_id;
-                place.international_phone_number = resultInfo.international_phone_number;
-                place.rating = resultInfo.rating;
-                place.weekday_text = resultInfo.weekday_text;
-                place.website = resultInfo.website;
-                place.PhotoUrl = resultInfo.PhotoUrl;
-                nearByPlaces.push(place);
+            for (var k=0;k<types.length;k++){
+                if(results[i].types[j]==types[k]){
+                    var placeDetails = await googleMapsClient.place({placeid: results[i].place_id}).asPromise()
+                    place.placeid = placeDetails.json.result.place_id;
+                    place.name = placeDetails.json.result.name;
+                    place.international_phone_number = placeDetails.json.result.international_phone_number;
+                    place.weekday_text = placeDetails.json.result.opening_hours.weekday_text;
+                    if (placeDetails.json.result.website!=undefined){
+                        place.website = placeDetails.json.result.website;
+                    }
+                    else{
+                        place.website = "N/A";
+                    }
+                    if (placeDetails.json.result.rating!=undefined){
+                        place.rating = placeDetails.json.result.rating;
+                    }
+                    else{
+                        place.rating = "N/A";
+                    }
+                    try {
+                        var placePhoto = placeDetails.json.result.photos[0];
+                        var placePhotoDetails = await googleMapsClient.placesPhoto({
+                            photoreference: placePhoto.photo_reference,
+                            maxwidth: 400,
+                            maxheight: 400
+                        }).asPromise();
+                        place.PhotoUrl = placePhotoDetails.connection.parser.outgoing.res.requestUrl;
+                    } catch (error) {
+                        place.PhotoUrl = "N/A";
+                    }
+                    nearByPlaces.push(place);
+                }
             }
         }
-
     }
     return nearByPlaces;    
 

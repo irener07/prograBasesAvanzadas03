@@ -3,23 +3,9 @@ const router = express.Router();
 const supermarkets = require('../models/supermarkets');
 const googleClient = require('../configuration/googleClient');
 
-
-//googleClient.searchPlaceByAddress("Walmart Paraiso");
-//googleClient.autocompleteQuery("Walmart");
-
-//
-//var result = googleClient.searchPlaceByAddress("Walmart Paraiso");
-//googleClient.autocompleteQuery("Walmart");
-//result.then((res)=>{
-// console.log(res);
-//});
-//googleClient.placeDetailsByCoordinates([9.8497821,-83.9489179]);
-
 router.get('/supermarkets/createSupermarket', (req, res) => {
     res.render('supermarkets/createSupermarket');
 });
-
-
 
 router.post('/supermarkets/createSupermarket', async (req, res) => {
     const {latitude, longitude, address}= req.body;
@@ -41,13 +27,13 @@ router.post('/supermarkets/createSupermarket', async (req, res) => {
         if(latitude!='' && longitude!='' && address==''){
             var result = googleClient.placeDetailsByCoordinates([latitude,longitude]);
             result.then((supermarketsFound)=>{
-                res.render('supermarkets/createSupermarket',{supermarketsFound});
+                res.render('supermarkets/createSupermarket',{latitude, longitude, address,supermarketsFound});
             });
         }
         if(latitude=='' && longitude=='' && address!=''){
-            var result = googleClient.searchPlaceByAddress("Walmart Paraiso");
+            var result = googleClient.searchPlaceByAddress(address);
             result.then((supermarketsFound)=>{
-                res.render('supermarkets/createSupermarket',{supermarketsFound});
+                res.render('supermarkets/createSupermarket',{latitude, longitude, address,supermarketsFound});
             });
         }
     }
@@ -59,15 +45,64 @@ router.get('/supermarkets', async (req, res) => {
 });
 
 router.get('/supermarkets/registerSupermarket/:id', async (req, res) => {
-    var result = googleClient.placeDetailsById(req.params.id);
+    var result = googleClient.placeDetailsID(req.params.id);
     result.then((supermarketsFound)=>{
         res.render('supermarkets/registerSupermarket',{supermarketsFound});
     });
 });
 
-router.get('/supermarkets/addProducts', async (req, res) => {
-    const employeeFound = req.body;
-    res.render('supermarkets/addProducts', {employeeFound});
+router.post('/supermarkets/registerSupermarket/:id', async (req, res) => {
+    const {idSuperMarket, name, description,address,latitude,longitude,typeSupermarket,image,
+            telephone, rating, schedule, website}= req.body;
+    const errors=[];
+    if(description==''){
+        errors.push({text: 'Please, Insert the Description'});
+    }
+    if(errors.length>0){
+        res.render('supermarkets/registerSupermarket',{errors, idSuperMarket, name, description,address,latitude,longitude,typeSupermarket,image,
+            telephone, rating, schedule, website});
+    }
+    else{
+        const idS = await supermarkets.findOne({idSuperMarket: idSuperMarket});
+        if (idS){
+            req.flash('error_msg', 'The Supermarket is Already Registered');
+            res.redirect('/supermarkets');
+        }
+        const newSupermarket = new supermarkets({idSuperMarket, name, description,address,latitude,
+            longitude,typeSupermarket,image,telephone, rating, schedule, website});
+        await newSupermarket.save();
+        req.flash('success_msg', 'Successful Registration');
+        res.redirect('/supermarkets');
+    } 
+});
+
+router.get('/supermarkets/registerProducts/:id', async (req, res) => {
+    const idM=req.params.id;
+    res.render('supermarkets/addProducts',{idM});
+});
+
+router.post('/supermarkets/registerProducts/:id', async (req, res) => {
+    const {idProduct, name, description,price,imageProducts01}= req.body;
+    const idM=req.params.id;
+    const errors=[];
+    if(description=='' || imageProducts01 == null || imageProducts01.width == 0 ||  idProduct=='' || name=='' || price==''){
+        errors.push({text: 'Please, Insert the Data'});
+    }
+    if(errors.length>0){
+        res.render('supermarkets/addProducts',{errors, idM, idProduct, name, description,price,imageProducts01});
+    }
+    else{
+/*         const idS = await supermarkets.findOne({idSuperMarket: idSuperMarket});
+        if (idS){
+            req.flash('error_msg', 'The Supermarket is Already Registered');
+            res.redirect('/supermarkets');
+        }
+        const newSupermarket = new supermarkets({idSuperMarket, name, description,address,latitude,
+            longitude,typeSupermarket,image,telephone, rating, schedule, website});
+        await newSupermarket.save();
+        req.flash('success_msg', 'Successful Registration');
+        res.redirect('/supermarkets'); */
+    } 
 });
 
 module.exports = router;

@@ -34,13 +34,13 @@
     <td>{{address}}</td>
     <td>{{latitude}}</td>
     <td>{{longitude}}</td>
-    <td>{{image}}</td>
+    <td><img src={{image}}></td>
     <td>{{telephone}}</td>
     <td>{{rating}}</td>
     <td>{{schedule}}</td>
     <td>{{website}}</td>
     <td>
-      <form action="/supermarkets/registerProducts/{{idSuperMarket}}" method="POST">
+      <form action="/supermarkets/registerProducts/{{idSuperMarket}}" method="GET">
         <button class="btn btn-success btn-block btn-sm" type="submit">
           Add Products
         </button> 

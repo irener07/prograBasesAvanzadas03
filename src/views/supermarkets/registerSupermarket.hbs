@@ -4,39 +4,43 @@
             <h3>Register Supermarket</h3>
         </div>
         <div class="card-body">
-            <form action="/clients/modify-client/{{client._id}}?_method=PUT" method="POST">
+            <form action="/supermarkets/registerSupermarket/{{supermarketsFound.placeid}}" method="POST">
                     <div class="form-group">
-                        <input type="text" class="form-control" name="idSuperMarket" placeholder="ID Supermarket" readonly="readonly" value={{client.idSuperMarket}} >
+                        <input type="text" class="form-control" name="idSuperMarket" placeholder="ID Supermarket" readonly="readonly" value="{{supermarketsFound.placeid}}" >
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="name" placeholder="Name" readonly="readonly" value={{client.name}} >
+                        <input type="text" class="form-control" name="name" placeholder="Name" readonly="readonly" value="{{supermarketsFound.name}}" >
                     </div>
                     <div class="form-group">
                         <input type="text" class="form-control" name="description" placeholder="Description">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="address" placeholder="Address" readonly="readonly" value={{client.address}}>
+                        <input type="text" class="form-control" name="address" style='height:auto;:auto' placeholder="Address" readonly="readonly" value="{{supermarketsFound.formatted_address}}">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="latitude" id="latitude" placeholder="Latitude" readonly="readonly" value={{client.latitude}}>
+                        <input type="text" class="form-control" name="latitude" id="latitude" placeholder="Latitude" readonly="readonly" value="{{supermarketsFound.lat}}">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="longitude" placeholder="Longitude" readonly="readonly" value={{client.longitude}}>
+                        <input type="text" class="form-control" name="longitude" placeholder="Longitude" readonly="readonly" value="{{supermarketsFound.lng}}">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="typeSupermarket" placeholder="typeSupermarket" readonly="readonly" value={{client.typeSupermarket}}>
+                        <input type="text" class="form-control" name="typeSupermarket" placeholder="typeSupermarket" readonly="readonly" value="{{supermarketsFound.typeSupermarket}}">
                     </div>
                     <div class="form-group">
-                        <input type="image" class="form-control" name="image" width="48" height="48" readonly="readonly" value={{client.image}}>
+                        <input name="image" class="form-control" style='visibility:hidden' readonly="readonly" value="{{supermarketsFound.PhotoUrl}}">
+                        <img  class="form-control" src={{supermarketsFound.PhotoUrl}} style='height:auto;:auto' >
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="telephone" placeholder="Telephone" readonly="readonly" value={{client.telephone}}>
+                        <input type="text" class="form-control" name="telephone" placeholder="Telephone" readonly="readonly" value="{{supermarketsFound.international_phone_number}}">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="rating" placeholder="Rating" readonly="readonly" value={{client.rating}}>
+                        <input type="text" class="form-control" name="rating" placeholder="Rating" readonly="readonly" value="{{supermarketsFound.rating}}">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="schedule" placeholder="Schedule" readonly="readonly" value={{client.schedule}}>
+                        <input type="text" class="form-control" name="schedule" placeholder="Schedule" readonly="readonly" value="{{supermarketsFound.weekday_text}}">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="website" placeholder="Web Site" readonly="readonly" value="{{supermarketsFound.website}}">
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary btn-block">

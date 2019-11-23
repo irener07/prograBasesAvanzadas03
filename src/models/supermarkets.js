@@ -29,7 +29,7 @@ const supermarketsSchema = new Schema({
         required: true
     },
     typeSupermarket: {
-        type: Array,
+        type: Object,
         required: true
     },
     image: {
@@ -37,7 +37,7 @@ const supermarketsSchema = new Schema({
         required: false
     },
     telephone: {
-        type: Number,
+        type: String,
         required: true
     },
     rating: {
@@ -54,7 +54,7 @@ const supermarketsSchema = new Schema({
     },
     products: {
         type: Array,
-        required: true
+        required: false
     }
 
 });
