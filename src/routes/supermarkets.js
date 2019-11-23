@@ -33,12 +33,12 @@ router.post('/supermarkets/createSupermarket', async (req, res) => {
     }
     else{
         if(latitude!='' && longitude!='' && address==''){
-            var supermarketsFound = googleClient.placeDetailsByCoordinates([latitude,longitude]);
-            console.log(supermarketsFound);
+            const supermarketsFound = googleClient.placeDetailsByCoordinates([latitude,longitude]);
             res.render('supermarkets/createSupermarket',{supermarketsFound});
+            console.log(supermarketsFound);
         }
         if(latitude=='' && longitude=='' && address!=''){
-            var supermarketsFound = await googleClient.searchPlaceByAddress(address);
+            var supermarketsFound = googleClient.searchPlaceByAddress(address);
             res.render('supermarkets/createSupermarket',{supermarketsFound});
         }
     }
