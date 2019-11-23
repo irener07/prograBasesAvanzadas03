@@ -57,10 +57,9 @@
 
 
 <tr>
-    {{!-- {{#each supermarketsFound}} --}}
     <th>{{supermarketsFound.placeid}}</th>
     <td>{{supermarketsFound.name}}</td>
-    <td>{{supermarketsFound.types}}</td>
+    <td>{{supermarketsFound.typeSupermarket}}</td>
     <td>{{supermarketsFound.formatted_address}}</td>
     <td>{{supermarketsFound.lat}}</td>
     <td>{{supermarketsFound.lng}}</td>
@@ -77,7 +76,6 @@
         </form>
     </td>
 </tr>
-    {{!-- {{/each}} --}}
 </table>
 
     {{/if}}
