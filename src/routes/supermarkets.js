@@ -58,9 +58,11 @@ router.get('/supermarkets', async (req, res) => {
     res.render('supermarkets/supermarketsModule', {supermarketsFound});
 });
 
-router.get('/supermarkets/registerSupermarket/', async (req, res) => {
-    const employeeFound = req.body;
-    res.render('supermarkets/registerSupermarket', {employeeFound});
+router.get('/supermarkets/registerSupermarket/:id', async (req, res) => {
+    var result = googleClient.placeDetailsById(req.params.id);
+    result.then((supermarketsFound)=>{
+        res.render('supermarkets/registerSupermarket',{supermarketsFound});
+    });
 });
 
 router.get('/supermarkets/addProducts', async (req, res) => {
