@@ -4,7 +4,18 @@ var googleMapsClient = require('@google/maps').createClient({
   });
 
 var resultInfo = {};
-
+var suggestions = {};
+var nearByPlaces = [];
+exports.autocompleteQuery = async function (queryText){
+    var resultSuggestions = await googleMapsClient.placesQueryAutoComplete({input: queryText}).asPromise();
+    var predictions = resultSuggestions.json.predictions;
+    suggestions.suggestion1 = predictions[0].description;
+    suggestions.suggestion2 = predictions[1].description;
+    suggestions.suggestion3 = predictions[2].description;
+    suggestions.suggestion4 = predictions[3].description;
+    suggestions.suggestion5 = predictions[4].description;
+    return suggestions;
+};
 
 exports.placeDetailsById = async function (place_id) {
     var resultPlaceDetails = await googleMapsClient.place({placeid: place_id}).asPromise();
@@ -50,7 +61,51 @@ exports.placeDetailsByCoordinates = async function(LatLng){
     }
 };
 
-exports.placeDetailsID = async function(id){
-    await exports.placeDetailsById(id);
-    return resultInfo;
+exports.nearbyPlaces = async function(placeLatLng,placeRadius,types){
+    nearByPlaces = [];
+    var resultNearByPlaces = await googleMapsClient.placesNearby({
+        location: placeLatLng,
+        radius: placeRadius,
+    }).asPromise();
+    var results = resultNearByPlaces.json.results;
+    for (var i=0;i<results.length;i++){
+        var place = {};
+        for (var j=0;j<results[i].types.length;j++){
+            for (var k=0;k<types.length;k++){
+                if(results[i].types[j]==types[k]){
+                    var placeDetails = await googleMapsClient.place({placeid: results[i].place_id}).asPromise()
+                    place.placeid = placeDetails.json.result.place_id;
+                    place.name = placeDetails.json.result.name;
+                    place.international_phone_number = placeDetails.json.result.international_phone_number;
+                    place.weekday_text = placeDetails.json.result.opening_hours.weekday_text;
+                    if (placeDetails.json.result.website!=undefined){
+                        place.website = placeDetails.json.result.website;
+                    }
+                    else{
+                        place.website = "N/A";
+                    }
+                    if (placeDetails.json.result.rating!=undefined){
+                        place.rating = placeDetails.json.result.rating;
+                    }
+                    else{
+                        place.rating = "N/A";
+                    }
+                    try {
+                        var placePhoto = placeDetails.json.result.photos[0];
+                        var placePhotoDetails = await googleMapsClient.placesPhoto({
+                            photoreference: placePhoto.photo_reference,
+                            maxwidth: 400,
+                            maxheight: 400
+                        }).asPromise();
+                        place.PhotoUrl = placePhotoDetails.connection.parser.outgoing.res.requestUrl;
+                    } catch (error) {
+                        place.PhotoUrl = "N/A";
+                    }
+                    nearByPlaces.push(place);
+                }
+            }
+        }
+    }
+    return nearByPlaces;    
+
 };
