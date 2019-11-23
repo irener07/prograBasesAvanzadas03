@@ -9,7 +9,22 @@
     <link rel="stylesheet" href="/css/main.css">
     <!---FONT AWESOME--->
     <script src="https://kit.fontawesome.com/b5d693a356.js" crossorigin="anonymous"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyCAk0jleMKarVVb-RBf6PqqvRVfZS3-Q60"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        var address = 'address';
 
+        $(document).ready(function () {
+            var autocomplete;
+            autocomplete = new google.maps.places.Autocomplete((document.getElementById(address)), {
+                types: ['establishment'],
+            });
+            
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                var near_place = autocomplete.getPlace();
+            });
+        });
+    </script>
 </head>
 <body>
     {{> navigation }}
