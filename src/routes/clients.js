@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const clients = require('../models/clients');
-
+const orders = require('../models/orders');
+const supermarkets = require('../models/supermarkets');
+const products = require('../models/products');
 const dataUserConnected = require('../configuration/connectDB');
 
 
@@ -37,6 +39,9 @@ router.get('/clients/clientsModule', (req, res) => {
     res.render('clients/clientsModule');
 });
 
-
+router.get('/clients/registerOrder', async (req, res) => {
+    const superMarkets = await supermarkets.find();
+    res.render('clients/registerOrder',{superMarkets});
+});
 
 module.exports = router;
