@@ -109,3 +109,8 @@ exports.nearbyPlaces = async function(placeLatLng,placeRadius,types){
     return nearByPlaces;    
 
 };
+
+exports.placeDetailsID = async function(idPlace){
+    await exports.placeDetailsById(idPlace);
+    return resultInfo;
+};

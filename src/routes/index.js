@@ -46,21 +46,18 @@ router.post('/', async (req, res) => {
       if(user){
         const match = await user.matchPassword(password);
         if(match){
-          const type= user.type;
-          if(type!="Manager"){
             dataUserConnected.typeUser="Employee";
             dataUserConnected.idUserConnected=user.id;
             res.redirect('employees/employeesModule');
           }
-          else{
-            errors.push({text: 'The Type are Incorrect.'});
+        else{
+            errors.push({text: 'The Password are Incorrect.'});
             res.render('index',{errors, email, password});}
         } else{
           errors.push({text: 'The Type are Incorrect.'});
           res.render('index',{errors, email, password});
         } 
       }
-    }
   }
 });
 
