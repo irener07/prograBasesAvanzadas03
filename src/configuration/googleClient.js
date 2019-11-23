@@ -64,3 +64,8 @@ exports.placeDetailsByCoordinates = async function(LatLng){
         }
     }
 };
+
+exports.placeDetailsID = async function(id){
+    await exports.placeDetailsById(id);
+    return resultInfo;
+};
