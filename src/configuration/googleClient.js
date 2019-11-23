@@ -4,17 +4,7 @@ var googleMapsClient = require('@google/maps').createClient({
   });
 
 var resultInfo = {};
-var suggestions = {};
-exports.autocompleteQuery = async function (queryText){
-    var resultSuggestions = await googleMapsClient.placesQueryAutoComplete({input: queryText}).asPromise();
-    var predictions = resultSuggestions.json.predictions;
-    suggestions.suggestion1 = predictions[0].description;
-    suggestions.suggestion2 = predictions[1].description;
-    suggestions.suggestion3 = predictions[2].description;
-    suggestions.suggestion4 = predictions[3].description;
-    suggestions.suggestion5 = predictions[4].description;
-    return suggestions;
-};
+
 
 exports.placeDetailsById = async function (place_id) {
     var resultPlaceDetails = await googleMapsClient.place({placeid: place_id}).asPromise();
