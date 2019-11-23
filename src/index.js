@@ -58,6 +58,7 @@ app.listen(config.PORT, ()=> console.log(`Server on port ${config.PORT}`));
 //var result = googleClient.placeDetailsByCoordinates([9.8497821,-83.9489179]);
 //var result = googleClient.searchPlaceByAddress("Walmart Paraiso");
 //var result = googleClient.autocompleteQuery("Walmart Costa Rica");
+//var result = googleClient.nearbyPlaces([9.8497821,-83.9489179],5000,['store']);
 //result.then((res)=>{
 // console.log(res);
 //});
