@@ -48,6 +48,7 @@ app.use(require('./routes/index'));
 app.use(require('./routes/employees'));
 app.use(require('./routes/clients'));
 app.use(require('./routes/supermarkets'));
+app.use(require('./routes/sites'));
 app.use(express.static(__dirname + '/public'));
 app.use(router);
 app.listen(config.PORT, ()=> console.log(`Server on port ${config.PORT}`));
