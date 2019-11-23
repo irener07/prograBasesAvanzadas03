@@ -3,22 +3,17 @@ var googleMapsClient = require('@google/maps').createClient({
     key: 'AIzaSyCAk0jleMKarVVb-RBf6PqqvRVfZS3-Q60'
   });
 
-var resultInfo = {};    
+var resultInfo = {};
+var suggestions = {};
 exports.autocompleteQuery = async function (queryText){
-        var suggestions = new Array();
-        googleMapsClient.placesQueryAutoComplete({
-        input: queryText
-        }, async function(err, response) {
-            if (!err) {
-                var predictions = response.json.predictions;
-                for (var i=0; i<predictions.length;i++){
-                    suggestions.push(predictions[i].description)
-                }
-                //return suggestions;
-                console.log(suggestions);
-            }
-        }
-        );
+    var resultSuggestions = await googleMapsClient.placesQueryAutoComplete({input: queryText}).asPromise();
+    var predictions = resultSuggestions.json.predictions;
+    suggestions.suggestion1 = predictions[0].description;
+    suggestions.suggestion2 = predictions[1].description;
+    suggestions.suggestion3 = predictions[2].description;
+    suggestions.suggestion4 = predictions[3].description;
+    suggestions.suggestion5 = predictions[4].description;
+    return suggestions;
 };
 
 exports.placeDetailsById = async function (place_id) {
