@@ -11,6 +11,7 @@ const bodyParser = require('body-parser');
 const bodyParserJSON = bodyParser.json();
 const bodyParserURLEncoded = bodyParser.urlencoded({extended: true});
 const flash = require('connect-flash');
+const googleClient = require('./configuration/googleClient');
 
 module.exports = router;
 
@@ -44,6 +45,8 @@ app.use((req, res, next) => {
   next();
 });
 
+
+
 app.use(require('./routes/index'));
 app.use(require('./routes/employees'));
 app.use(require('./routes/clients'));
@@ -51,4 +54,5 @@ app.use(require('./routes/supermarkets'));
 app.use(express.static(__dirname + '/public'));
 app.use(router);
 app.listen(config.PORT, ()=> console.log(`Server on port ${config.PORT}`));
+
 connectDb();

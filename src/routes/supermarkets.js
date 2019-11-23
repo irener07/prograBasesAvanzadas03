@@ -49,9 +49,14 @@ router.get('/supermarkets', async (req, res) => {
     res.render('supermarkets/supermarketsModule', {supermarketsFound});
 });
 
-router.get('/supermarkets/registerSupermarket/:id', async (req, res) => {
+router.get('/supermarkets/registerSupermarket/', async (req, res) => {
     const employeeFound = req.body;
-    res.render('employees/editEmployees', {employeeFound});
+    res.render('supermarkets/registerSupermarket', {employeeFound});
+});
+
+router.get('/supermarkets/addProducts', async (req, res) => {
+    const employeeFound = req.body;
+    res.render('supermarkets/addProducts', {employeeFound});
 });
 
 module.exports = router;
