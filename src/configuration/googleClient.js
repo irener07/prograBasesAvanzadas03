@@ -32,6 +32,7 @@ exports.placeDetailsById = async function (place_id) {
     resultInfo.weekday_text = resultPlaceDetails.json.result.opening_hours.weekday_text;
     resultInfo.website = resultPlaceDetails.json.result.website;
     resultInfo.typeSupermarket = resultPlaceDetails.json.result.types;
+    resultInfo.rating = resultPlaceDetails.json.result.rating;
     var resultPhoto = resultPlaceDetails.json.result.photos[0];
     var resultPhotoDetails = await googleMapsClient.placesPhoto({
         photoreference: resultPhoto.photo_reference,
