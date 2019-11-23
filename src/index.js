@@ -12,7 +12,6 @@ const bodyParserJSON = bodyParser.json();
 const bodyParserURLEncoded = bodyParser.urlencoded({extended: true});
 const flash = require('connect-flash');
 const googleClient = require('./configuration/googleClient');
-const {promisify} = require('util');
 
 module.exports = router;
 
@@ -45,6 +44,8 @@ app.use((req, res, next) => {
   res.locals.user = req.user || null;
   next();
 });
+
+
 
 app.use(require('./routes/index'));
 app.use(require('./routes/employees'));
