@@ -3,89 +3,59 @@ var googleMapsClient = require('@google/maps').createClient({
     key: 'AIzaSyCAk0jleMKarVVb-RBf6PqqvRVfZS3-Q60'
   });
 
-    
+var resultInfo = {};
+var suggestions = {};
 exports.autocompleteQuery = async function (queryText){
-        var suggestions = new Array();
-        googleMapsClient.placesQueryAutoComplete({
-        input: queryText
-        }, async function(err, response) {
-            if (!err) {
-                var predictions = response.json.predictions;
-                for (var i=0; i<predictions.length;i++){
-                    suggestions.push(predictions[i].description)
-                }
-                //return suggestions;
-                console.log(suggestions);
-            }
-        }
-        );
+    var resultSuggestions = await googleMapsClient.placesQueryAutoComplete({input: queryText}).asPromise();
+    var predictions = resultSuggestions.json.predictions;
+    suggestions.suggestion1 = predictions[0].description;
+    suggestions.suggestion2 = predictions[1].description;
+    suggestions.suggestion3 = predictions[2].description;
+    suggestions.suggestion4 = predictions[3].description;
+    suggestions.suggestion5 = predictions[4].description;
+    return suggestions;
 };
 
 exports.placeDetailsById = async function (place_id) {
-        googleMapsClient.place({
-            placeid: place_id,
-        },  async function (err, response) {
-            if (!err) {
-                var resultInfo = {};
-                var result = response.json.result;
-                resultInfo.placeid = result.place_id;
-                resultInfo.name = result.name;
-                resultInfo.formatted_address = result.formatted_address;
-                resultInfo.lat = result.geometry.location.lat;
-                resultInfo.lng = result.geometry.location.lng;
-                resultInfo.international_phone_number = result.international_phone_number;
-                resultInfo.weekday_text = result.opening_hours.weekday_text;
-                resultInfo.website = result.website;
-                //Access Photo
-                var photoObj = result.photos[0];
-                googleMapsClient.placesPhoto({
-                    photoreference: photoObj.photo_reference,
-                    maxheight: photoObj.height,
-                    maxwidth: photoObj.width
-                }, async (err, responsePhoto) => {
-                    if (!err) {
-                        var photoUrl = await responsePhoto.connection.parser.outgoing.res.requestUrl;
-                        resultInfo.photoUrl = await photoUrl;
-                        console.log(resultInfo);
-                        
-                    }
-                });
-                return resultInfo;
-            }
-        });
+    var resultPlaceDetails = await googleMapsClient.place({placeid: place_id}).asPromise();
+    resultInfo.placeid = resultPlaceDetails.json.result.place_id;
+    resultInfo.name = resultPlaceDetails.json.result.name;
+    resultInfo.formatted_address = resultPlaceDetails.json.result.formatted_address;
+    resultInfo.lat = resultPlaceDetails.json.result.geometry.location.lat;
+    resultInfo.lng = resultPlaceDetails.json.result.geometry.location.lng;
+    resultInfo.international_phone_number = resultPlaceDetails.json.result.international_phone_number;
+    resultInfo.weekday_text = resultPlaceDetails.json.result.opening_hours.weekday_text;
+    resultInfo.website = resultPlaceDetails.json.result.website;
+    resultInfo.typeSupermarket = resultPlaceDetails.json.result.types;
+    resultInfo.rating = resultPlaceDetails.json.result.rating;
+    var resultPhoto = resultPlaceDetails.json.result.photos[0];
+    var resultPhotoDetails = await googleMapsClient.placesPhoto({
+        photoreference: resultPhoto.photo_reference,
+        maxwidth: 400,
+        maxheight: 400
+    }).asPromise();
+    resultInfo.PhotoUrl = resultPhotoDetails.connection.parser.outgoing.res.requestUrl;
 };
 
-exports.searchPlaceByAddress = async function (address,callback){
-        googleMapsClient.findPlace({
-            input: address,
-            inputtype: 'textquery',
-        }, async function(err, response) {
-            if (!err) {
-                const placeId = response.json.candidates[0].place_id;
-                console.log(exports.placeDetailsById(placeId));
-            }
-        }
-        );
+exports.searchPlaceByAddress = async function (address){
+    var resultIdPlaceSearch = await googleMapsClient.findPlace({input:address,inputtype:'textquery'}).asPromise();
+    const placeId = resultIdPlaceSearch.json.candidates[0].place_id;
+    await exports.placeDetailsById(placeId);
+    return resultInfo;
 };
 
 
 exports.placeDetailsByCoordinates = async function(LatLng){
-        googleMapsClient.reverseGeocode({
-            latlng: LatLng
-        }, async function(err, response) {
-            if (!err) {
-                var placesFound = response.json.results;
-                for(var i=0;i<=placesFound.length;i++){
-                    var placeFoundTypes = placesFound[i].types;
-                    for(var j=0;j<=placeFoundTypes.length;j++){
-                        if(placeFoundTypes[j]=='supermarket'){
-                            var foundPlaceId = response.json.results[i].place_id;
-                            const place = await exports.placeDetailsById(foundPlaceId);
-                            return place;
-                        }
-                    }
-                }
+    var reverseGeocoding = await googleMapsClient.reverseGeocode({latlng: LatLng}).asPromise();
+    var placesFound = reverseGeocoding.json.results;
+    for(var i=0;i<=placesFound.length;i++){
+        var placeFoundTypes = placesFound[i].types;
+        for(var j=0;j<=placeFoundTypes.length;j++){
+            if(placeFoundTypes[j]=='supermarket'){
+                var foundPlaceId = reverseGeocoding.json.results[i].place_id;
+                await exports.placeDetailsById(foundPlaceId);
+                return resultInfo;
             }
         }
-        );
+    }
 };

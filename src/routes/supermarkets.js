@@ -7,7 +7,13 @@ const googleClient = require('../configuration/googleClient');
 //googleClient.searchPlaceByAddress("Walmart Paraiso");
 //googleClient.autocompleteQuery("Walmart");
 
-
+//
+//var result = googleClient.searchPlaceByAddress("Walmart Paraiso");
+//googleClient.autocompleteQuery("Walmart");
+//result.then((res)=>{
+// console.log(res);
+//});
+//googleClient.placeDetailsByCoordinates([9.8497821,-83.9489179]);
 
 router.get('/supermarkets/createSupermarket', (req, res) => {
     res.render('supermarkets/createSupermarket');
@@ -33,13 +39,16 @@ router.post('/supermarkets/createSupermarket', async (req, res) => {
     }
     else{
         if(latitude!='' && longitude!='' && address==''){
-            const supermarketsFound = await googleClient.placeDetailsByCoordinates([latitude,longitude]);
-            res.render('supermarkets/createSupermarket',{supermarketsFound});
-            console.log(supermarketsFound);
+            var result = googleClient.placeDetailsByCoordinates([latitude,longitude]);
+            result.then((supermarketsFound)=>{
+                res.render('supermarkets/createSupermarket',{supermarketsFound});
+            });
         }
         if(latitude=='' && longitude=='' && address!=''){
-            var supermarketsFound = await googleClient.searchPlaceByAddress(address);
-            res.render('supermarkets/createSupermarket',{supermarketsFound});
+            var result = googleClient.searchPlaceByAddress("Walmart Paraiso");
+            result.then((supermarketsFound)=>{
+                res.render('supermarkets/createSupermarket',{supermarketsFound});
+            });
         }
     }
 });
@@ -50,8 +59,15 @@ router.get('/supermarkets', async (req, res) => {
 });
 
 router.get('/supermarkets/registerSupermarket/:id', async (req, res) => {
+    var result = googleClient.placeDetailsById(req.params.id);
+    result.then((supermarketsFound)=>{
+        res.render('supermarkets/registerSupermarket',{supermarketsFound});
+    });
+});
+
+router.get('/supermarkets/addProducts', async (req, res) => {
     const employeeFound = req.body;
-    res.render('employees/editEmployees', {employeeFound});
+    res.render('supermarkets/addProducts', {employeeFound});
 });
 
 module.exports = router;
