@@ -1,0 +1,78 @@
+<div class="row">
+    <div class="card">
+        <div class="card-header">
+            <h1>Possible Sites to Order</h1> 
+        </div>
+        <div class="card-body">
+            <form action="/clients/sitesToOrder" method='POST'> 
+                <div class="form-group">
+                    <label>Select Supermarket</label>
+                </div>
+                <div class="form-group">
+                    <select name ="superMarket" id="superMarket">
+                        {{#each superMarkets}}
+                        <option value="{{idSuperMarket}}">{{name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="form-group">
+                    Select a Type: 
+                    <select name ="siteType" id ="siteType" multiple="multiple">
+                        <option value="Restaurants">Counter</option>
+                        <option value="Movies">BoardingRooms</option>
+                        <option value="Doctors">Load</option>
+                        <option value="Museums">Maintenance</option>     
+                    </select>   </br> 
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{{#if client}}
+<div class="row">
+
+    <div class="card-header">
+        <h1>Data Client</h1> 
+    </div>
+<table class="egt table {
+    border-collapse: separate;
+    border-spacing: 5px;
+    background: #000 url("gradient.gif") bottom left repeat-x;
+    color: #fff;
+ }">  
+    <tr>
+    <th scope="row">ID</th>
+    <th>Firts Name</th>
+    <th>Last Name</th>
+    <th>Birth Date</th>
+    <th>Nacionality</th>
+    <th>Country</th>
+    <th>State</th>
+    <th>Address</th>
+    <th>Email</th>
+    <th>Telephones</th>
+    </tr>
+
+    <tr>
+        <td>{{client.id}}</td>
+        <td>{{client.firstName}}</td>
+        <td>{{client.lastName}}</td>
+        <td>{{client.birthDate}}</td>
+        <td>{{client.nationality}}</td>
+        <td>{{client.country}}</td>
+        <td>{{client.state}}</td>
+        <td>{{client.address}}</td>
+        <td>{{client.email}}</td>
+        <td>{{client.telephone}}</td>
+    </tr>
+    {{/if}}
+</table>
+
+</div>
