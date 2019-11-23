@@ -39,12 +39,11 @@ exports.placeDetailsById = async function (place_id) {
                     photoreference: photoObj.photo_reference,
                     maxheight: photoObj.height,
                     maxwidth: photoObj.width
-                }, (err, responsePhoto) =>{
+                }, async (err, responsePhoto) =>{
                     if(!err){
-                        var photoUrl = responsePhoto.connection.parser.outgoing.res.requestUrl;
-                        resultInfo.photoUrl = photoUrl;
+                        var photoUrl = await responsePhoto.connection.parser.outgoing.res.requestUrl;
+                        resultInfo.photoUrl = await photoUrl;
                         console.log(resultInfo);
-                        return resultInfo;
                     }
                 }
                 );
@@ -54,6 +53,7 @@ exports.placeDetailsById = async function (place_id) {
             }
         }
         );
+        return resultInfo;
 };
 
 exports.searchPlaceByAddress = async function (address){
