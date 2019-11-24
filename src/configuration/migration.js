@@ -1,46 +1,11 @@
 var neo4j = require('neo4j-driver').v1;
-var driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('TECMarket', 'Abcd1234'));
+var driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('neo4j', 'Abcd1234'));
 var session = driver.session();
 
 const clients = require('../models/clients');
 const supermarkets = require('../models/supermarkets');
 const orders = require('../models/orders');
 
-
-session.run('MATCH (n)DETACH DELETE n')
-.then(function(result){
-    session.close();                
-})
-.catch(function(err){
-    console.log(err);
-})
-const mongoClients = await clients.find();
-for(var i = 0; i < mongoClients.length; i++){
-const client = mongoClients[i];
-//console.log(client);
-const id = client.id;
-const firstName = client.firstName;
-const lastName = client.lastName;
-const birthDate = client.birthDate.toString();
-const email = client.email;
-const password =  client.password;
-const telephone = client.telephone;
-
-const resultPromise = session.run('CREATE (n:clients {id:{idParam},firstName:{firstNameParam},lastName:{lastNameParam},birthDate:{birthDateParam},email:{emailParam},password:{passwordParam},telephone:{telephoneParam}}) Return n',
- {idParam:id,firstNameParam:firstName,lastNameParam:lastName,birthDateParam:birthDate,emailParam:email,passwordParam:password,telephoneParam:telephone})
-
- resultPromise.then(result => {
-    session.close();
-  
-    const singleRecord = result.records[0];
-    const node = singleRecord.get(0);
-  
-    console.log(node.properties.name);
-  
-    // on application exit:
-    driver.close();
-  });
-};
 
 module.exports = async()=>{
     session

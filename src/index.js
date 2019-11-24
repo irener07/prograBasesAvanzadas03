@@ -14,12 +14,14 @@ const bodyParserURLEncoded = bodyParser.urlencoded({extended: true});
 const flash = require('connect-flash');
 const googleClient = require('./configuration/googleClient');
 
+
 module.exports = router;
 
 app.use(bodyParserJSON);
 app.use(bodyParserURLEncoded);
 
-//connectNeo();
+connectNeo();
+
 
 app.set('views', path.join(__dirname, 'views'));
 app.engine('.hbs', exphbs({
@@ -66,3 +68,4 @@ app.listen(config.PORT, ()=> console.log(`Server on port ${config.PORT}`));
 //});
 //googleClient.placeDetailsByCoordinates([9.8497821,-83.9489179]);
 connectDb();
+
