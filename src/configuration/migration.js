@@ -6,6 +6,42 @@ const clients = require('../models/clients');
 const supermarkets = require('../models/supermarkets');
 const orders = require('../models/orders');
 
+
+session.run('MATCH (n)DETACH DELETE n')
+.then(function(result){
+    session.close();                
+})
+.catch(function(err){
+    console.log(err);
+})
+const mongoClients = await clients.find();
+for(var i = 0; i < mongoClients.length; i++){
+const client = mongoClients[i];
+//console.log(client);
+const id = client.id;
+const firstName = client.firstName;
+const lastName = client.lastName;
+const birthDate = client.birthDate.toString();
+const email = client.email;
+const password =  client.password;
+const telephone = client.telephone;
+
+const resultPromise = session.run('CREATE (n:clients {id:{idParam},firstName:{firstNameParam},lastName:{lastNameParam},birthDate:{birthDateParam},email:{emailParam},password:{passwordParam},telephone:{telephoneParam}}) Return n',
+ {idParam:id,firstNameParam:firstName,lastNameParam:lastName,birthDateParam:birthDate,emailParam:email,passwordParam:password,telephoneParam:telephone})
+
+ resultPromise.then(result => {
+    session.close();
+  
+    const singleRecord = result.records[0];
+    const node = singleRecord.get(0);
+  
+    console.log(node.properties.name);
+  
+    // on application exit:
+    driver.close();
+  });
+};
+
 module.exports = async()=>{
     session
         .run('MATCH (n)DETACH DELETE n')
@@ -98,34 +134,25 @@ module.exports = async()=>{
         })
     };
 
+    //Relacion entre las ordenes y los clientes
 
-    for(var i = 0; i < adminMongoClients.length; i++){
+    for(var i = 0; i < mongoClients.length; i++){
         //console.log(adminMongoClients);
-        const client = adminMongoClients[i];
+        const client = mongoClients[i];
         //console.log(client);
-        const idUser = client.idUser.toString();
-        console.log("Pto1: idUser");
-        console.log(idUser);
-        const email = client.email;
+        const id = client.id;
         //console.log("Pto1: email");
         //console.log(email);
 
-        for(var j = 0; j < adminMongoDeliveries.length; j++){
-            const delivery = adminMongoDeliveries[j];
-            //console.log(delivery);
-            const idDelivery = delivery._id.toString();
-            //console.log("Pto2: idDelivery");
-            //console.log(idDelivery);
-            const idClientDelivery = delivery.idClient;
-            //console.log("Pto2: idClientDelivery");
-            //console.log(idClientDelivery);
+        for(var j = 0; j < mongoOrders.length; j++){
+            const order = mongoOrders[j];
+            const idOrder = order.id.toString();
+            const idClientOrder = order.idClient;
 
-            if(idClientDelivery==email){
-                //console.log("Pto3: It is inside");
-                //console.log("Pto3: "+idDelivery);
-                //console.log("Pto3: "+idUser);
+            if(idClientOrder==id){
+
                 session
-                    .run('MATCH (a:Clients {idUser:{idUserParam}}),(b:Deliveries {idDelivery:{idDeliveryParam}}) MERGE(a)-[r:ORDER]-(b) RETURN a,b', {idDeliveryParam:idDelivery, idUserParam:idUser})
+                    .run('MATCH (a:clients {id:{idParam}}),(b:orders {id:{idParam}}) MERGE(a)-[r:ORDER]-(b) RETURN a,b', {idParam:id, idParam:idOrder})
                     .then(function(result){
                         //console.log(idUser);
                         //console.log(idDelivery);
@@ -139,29 +166,26 @@ module.exports = async()=>{
         };
     };
 
-    for(var i = 0; i < adminMongoDeliveries.length; i++){
-        const delivery = adminMongoDeliveries[i];
+    //Relacion entre ordenes y supermercados
+
+    for(var i = 0; i < mongoOrders.length; i++){
+        const order = mongoOrders[i];
         //console.log(delivery);
 
-        const idDelivery = delivery._id.toString();
+        const id = order.id.toString();
         //console.log("Pto1: idDelivery");
         //console.log(idDelivery);
-        const idPlaceDelivery = delivery.idPlace;
+        const idSuperMarketOrder = order.idSuperMarket;
         //console.log("Pto1: idPlaceDelivery");
         //console.log(idPlaceDelivery);
 
-        for(var j = 0; j < adminMongoPlaces.length; j++){
-            const place = adminMongoPlaces[j];
-            //console.log(place);
-            const idPlace = place.idPlace;
-            //console.log("Pto2: idPlaceDelivery");
-            //console.log(idPlaceDelivery);
-            //console.log("Pto2: idPlace");
-            //console.log(idPlace);
-            if (idPlaceDelivery == idPlace){
-                //console.log("Pto3: It is inside");
+        for(var j = 0; j < mongoSupermarkets.length; j++){
+            const supermarket = mongoSupermarkets[j];
+            const idSuperMarket = supermarket.idSuperMarket;
+
+            if (idSuperMarketOrder == idSuperMarket){
                 session
-                    .run('MATCH (a:Deliveries {idDelivery:{idDeliveryParam}}),(b:Places{idPlace:{idPlaceParam}}) MERGE(a)-[r:LEAVES_FROM]-(b) RETURN a,b', {idPlaceParam:idPlace, idDeliveryParam:idDelivery})
+                    .run('MATCH (a:orders {id:{idParam}}),(b:supermarkets {idSuperMarket:{idSuperMarketParam}}) MERGE(a)-[r:LEAVES_FROM]-(b) RETURN a,b', {idSuperMarketParam:idSuperMarket, idParam:id})
                     .then(function(result){
                         session.close();                
                     })
