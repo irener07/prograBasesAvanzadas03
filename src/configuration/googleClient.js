@@ -73,7 +73,8 @@ exports.nearbyPlaces = async function(placeLatLng,placeRadius,types){
         for (var j=0;j<results[i].types.length;j++){
             for (var k=0;k<types.length;k++){
                 if(results[i].types[j]==types[k]){
-                    var placeDetails = await googleMapsClient.place({placeid: results[i].place_id}).asPromise()
+                    
+                    var placeDetails = await googleMapsClient.place({placeid: results[i].place_id}).asPromise();
                     place.placeid = placeDetails.json.result.place_id;
                     place.name = placeDetails.json.result.name;
                     place.international_phone_number = placeDetails.json.result.international_phone_number;
@@ -106,11 +107,28 @@ exports.nearbyPlaces = async function(placeLatLng,placeRadius,types){
             }
         }
     }
+    for(var l=0;l<nearByPlaces.length;l++){
+        for(var n=0;n<nearByPlaces.length;n++){
+            if(nearByPlaces[l]!=undefined && nearByPlaces[n]!=undefined && nearByPlaces[n].placeid==nearByPlaces[l].placeid){
+                if(n!=l){
+                    delete nearByPlaces[n];
+                }
+            }
+        }
+    }
     return nearByPlaces;    
-
 };
 
 exports.placeDetailsID = async function(idPlace){
     await exports.placeDetailsById(idPlace);
     return resultInfo;
 };
+
+exports.distanceBetween = async function(latLngOrigin,latLngDestination){
+    var resultDistance = await googleMapsClient.distanceMatrix({
+        origins: latLngOrigin,
+        destinations: latLngDestination,
+        units: 'metric'
+    }).asPromise();
+    return resultDistance.json.rows[0].elements[0].distance.text;
+}
