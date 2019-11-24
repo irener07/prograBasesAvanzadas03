@@ -1,13 +1,27 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
-const client = require('../models/clients');
 const supermarkets = require('../models/supermarkets');
 const savedSites = require('../models/savedSites');
 const dataUserConnected = require('../configuration/connectDB');
 const googleClient = require('../configuration/googleClient');
 var superMarketId="";
 
+router.get('/clients/possibleSitesToOrderModule', async (req,res) =>{
+    var listSites = await savedSites.find({idClient:dataUserConnected.idUserConnected});
+    const listSupermarkets = await supermarkets.find();
+    for (i=0; i<listSites.length;i++){
+        for (j=0; j<listSupermarkets;j++){
+            var n = listSites[i].idSuperMarket.localeCompare(listSupermarkets[j].idSuperMarket);
+            if(n==0){
+                listSites[i].idSuperMarket = listSupermarkets[j].name;
+                console.log(listSupermarkets[j].name);
+                console.log(listSites[i].idSuperMarket);
+            }
+        }
+    };
+
+    res.render('clients/possibleSitesToOrderModule',{listSites});
+});
 
 router.get('/clients/possibleSitesToOrder/search', async (req,res) =>{
     const superMarkets = await supermarkets.find();
@@ -60,6 +74,8 @@ router.post('/clients/possibleSitesToOrder/registerSite/:id',async (req,res) =>{
                 $push:{sites: newSite}
             }
         );
+        req.flash('success_msg', 'Successful Registration');
+        res.redirect('/clients/possibleSitesToOrderModule');
     }
     else{
         sites = [];
@@ -71,10 +87,11 @@ router.post('/clients/possibleSitesToOrder/registerSite/:id',async (req,res) =>{
         });
         await savedSitesClient.save();
         req.flash('success_msg', 'Successful Registration');
-        const superMarkets = await supermarkets.find();
-        res.render('clients/possibleSitesToOrder',{superMarkets});
+        res.redirect('/clients/possibleSitesToOrderModule');
 
     }
     
 });
+
+
 module.exports = router;
