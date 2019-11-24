@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const clients = require('../models/clients');
+const fs = require('fs');
 const orders = require('../models/orders');
 const supermarkets = require('../models/supermarkets');
 const products = require('../models/products');
@@ -42,6 +43,30 @@ router.get('/clients/clientsModule', (req, res) => {
 router.get('/clients/registerOrder', async (req, res) => {
     const superMarkets = await supermarkets.find();
     res.render('clients/registerOrder',{superMarkets});
+});
+
+router.post('/clients/registerOrder', async (req, res) => {
+    const {superMarket}= req.body;
+    const superMarkets = await supermarkets.find();
+    var productsSupermarket = await supermarkets.findOne({idSuperMarket: superMarket});
+    productsSupermarket = await productsSupermarket.products;
+    var paths = [];
+    for (i=0; i<productsSupermarket.length; i++){
+        var path = 'C:/images/'+i+'.jpeg';
+        var data = productsSupermarket[i].img.data.buffer;
+        var thumb = new Buffer.from(data, 'base64');
+        fs.writeFile(path,thumb,function(err){
+            if(err){
+                console.log(err);
+            }
+            else{
+                console.log("Exito");
+            }
+        });
+        productsSupermarket[i].img.contentType = path.replace('/','\\');
+        paths.push({path:path});
+    };
+    res.render('clients/registerOrder',{superMarkets, productsSupermarket});
 });
 
 module.exports = router;
