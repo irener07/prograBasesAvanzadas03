@@ -40,7 +40,7 @@ router.post('/clients/possibleSitesToOrder/registerSite/:id',async (req,res) =>{
     newSite.rating = newSiteDetails.rating;
     newSite.weekday_text = newSiteDetails.weekday_text;
     newSite.website = newSiteDetails.website;
-    newSiteDetails.photoUrl = newSiteDetails.photoUrl;
+    newSite.PhotoUrl = newSiteDetails.PhotoUrl;
     var newSiteDistance = await googleClient.distanceBetween(
         [[superMarketInfo.lat,superMarketInfo.lng]],
         [[newSiteDetails.lat,newSiteDetails.lng]]
@@ -71,6 +71,9 @@ router.post('/clients/possibleSitesToOrder/registerSite/:id',async (req,res) =>{
         });
         await savedSitesClient.save();
         req.flash('success_msg', 'Successful Registration');
+        const superMarkets = await supermarkets.find();
+        res.render('clients/possibleSitesToOrder',{superMarkets});
+
     }
     
 });
