@@ -99,12 +99,14 @@ router.post('/supermarkets/registerProducts/:id', async (req, res) => {
     else{
         const newProduct = new products({idProduct, name, description, price});
         newProduct.img.data = fs.readFileSync(path)
-        newProduct.img.contentType = 'image/*';
+        newProduct.img.contentType = 'image/png';
 
         await supermarkets.findOneAndUpdate({idSuperMarket: idM}, {$push:{products: newProduct}});
         req.flash('success_msg', 'Successful Registration');
         res.redirect('/supermarkets');
     } 
 });
+
+
 
 module.exports = router;
