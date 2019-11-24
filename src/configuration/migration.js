@@ -1,48 +1,50 @@
-var neo4j = require('neo4j-driver').v1;
-var driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('TECMarket', 'Abcd1234'));
-var session = driver.session();
+const neo4j = require('neo4j-driver').v1;
+const driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('neo4j', '6564'));
+console.log('Buena');
+const session = driver.session();
 
 const clients = require('../models/clients');
 const supermarkets = require('../models/supermarkets');
-const orders = require('../models/orders');
-
-
-session.run('MATCH (n)DETACH DELETE n')
-.then(function(result){
-    session.close();                
-})
-.catch(function(err){
-    console.log(err);
-})
-const mongoClients = await clients.find();
-for(var i = 0; i < mongoClients.length; i++){
-const client = mongoClients[i];
-//console.log(client);
-const id = client.id;
-const firstName = client.firstName;
-const lastName = client.lastName;
-const birthDate = client.birthDate.toString();
-const email = client.email;
-const password =  client.password;
-const telephone = client.telephone;
-
-const resultPromise = session.run('CREATE (n:clients {id:{idParam},firstName:{firstNameParam},lastName:{lastNameParam},birthDate:{birthDateParam},email:{emailParam},password:{passwordParam},telephone:{telephoneParam}}) Return n',
- {idParam:id,firstNameParam:firstName,lastNameParam:lastName,birthDateParam:birthDate,emailParam:email,passwordParam:password,telephoneParam:telephone})
-
- resultPromise.then(result => {
-    session.close();
-  
-    const singleRecord = result.records[0];
-    const node = singleRecord.get(0);
-  
-    console.log(node.properties.name);
-  
-    // on application exit:
-    driver.close();
-  });
-};
 
 module.exports = async()=>{
+
+    session
+        .run('MATCH (n)DETACH DELETE n')
+        .then(function(result){
+            session.close();                
+        })
+        .catch(function(err){
+            console.log(err);
+        })
+    const mongoClients = await clients.find();
+    for(var i = 0; i < mongoClients.length; i++){
+        const client = mongoClients[i];
+        //console.log(client);
+        const id = client.id;
+        const firstName = client.firstName;
+        const lastName = client.lastName;
+        const birthDate = client.birthDate.toString();
+        const email = client.email;
+        const password =  client.password;
+        const telephone = client.telephone;
+
+        const resultPromise = session
+        .run('CREATE (n:clients {id:{idParam},firstName:{firstNameParam},lastName:{lastNameParam},birthDate:{birthDateParam},email:{emailParam},password:{passwordParam},telephone:{telephoneParam}}) Return n',
+         {idParam:id,firstNameParam:firstName,lastNameParam:lastName,birthDateParam:birthDate,emailParam:email,passwordParam:password,telephoneParam:telephone})
+        
+         resultPromise.then(result => {
+            session.close();
+          
+            const singleRecord = result.records[0];
+            const node = singleRecord.get(0);
+          
+            console.log(node.properties.name);
+          
+            // on application exit:
+            driver.close();
+          });
+    };
+
     session
         .run('MATCH (n)DETACH DELETE n')
         .then(function(result){
@@ -52,31 +54,86 @@ module.exports = async()=>{
             console.log(err);
         })
 
-    const mongoClients = await clients.find();
+    const mongoSupermarkets = await supermarkets.find();
+    for(var i = 0; i < mongoSupermarkets.length; i++){
+        const supermarket = mongoSupermarkets[i];
+        const idSuperMarket = supermarket.idSuperMarket;
+        const name = supermarket.name;
+        const description = supermarket.description;
+        const address = supermarket.address;
+        const latitude = supermarket.latitude.toString();
+        const longitude = supermarket.longitude.toString();
+        const typeSuperMarket = supermarket.typeSupermarket;
+        const telephone = supermarket.telephone;
+        const rating = supermarket.rating;
+        const schedule = supermarket.schedule;
+        const website = supermarket.website;
 
-    for(var i = 0; i < mongoClients.length; i++){
-        const client = mongoClients[i];
-        //console.log(client);
-        const id = client.id.toString();
-        const firstName = client.firstName;
-        const lastName = client.lastName;
-        const birthDate = client.birthDate;
-        const email = client.email;
-        const password =  client.password;
-        const telephone = client.telephone;
-
-        session
-        .run('CREATE (n:clients {id:{idParam},firstName:{firstNameParam},lastName:{lastNameParam},birthDate:{birthDateParam},email:{emailParam},password:{passwordParam},telephone:{telephoneParam}}) Return n',
-         {idParam:id,firstNameParam:firstName,lastNameParam:lastName,birthDateParam:birthDate,emailParam:email,passwordParam:password,telephoneParam:telephone})
-        .then(function(result){
-            session.close();                
+        const resultPromise = session
+        .run('CREATE (n:supermarkets{idSuperMarket:{idSuperMarketParam},name:{nameParam},description:{descriptionParam},address:{addressParam},latitude:{latitudeParam},longitude:{longitudeParam},typeSuperMarket:{typeSuperMarketParam},telephone:{telephoneParam},rating:{ratingParam},schedule:{scheduleParam},website:{websiteParam}) Return n',
+         {idSuperMarketParam:idSuperMarket,nameParam:name,descriptionParam:description,addressParam:address,latitudeParam:latitude,longitudeParam:longitude,typeSuperMarketParam:typeSuperMarket,telephoneParam:telephone,ratingParam:rating,scheduleParam:schedule,websiteParam:website})
+        
+         resultPromise.then(result =>{
+            session.close();   
+            const singleRecord = result.records[0];
+            const node = singleRecord.get(0);
+          
+            console.log(node.properties.name);
+          
+            // on application exit:
+            driver.close();             
         })
         .catch(function(err){
             console.log(err);
         })
     };
 
+        
+/*
+    session
+        .run('MATCH (n)DETACH DELETE n')
+        .then(function(result){
+            session.close();                
+        })
+        .catch(function(err){
+            console.log(err);
+        })
+
     const mongoOrders = await orders.find();
+
+    
+
+
+    for(var i = 0; i < mongoOrders.length; i++){
+        const order = mongoOrders[i];
+
+        
+        const products = order.products.toString();
+        const dateTime = order.dateTime.toString();
+        //console.log(date);
+        const status = order.status;
+        const particularNeeds = order.particularNeeds;
+        const idClient = order.idClient;
+        const idSuperMarket = order.idSuperMarket;
+        const totalAmount = order.totalAmount;
+
+        const resultPromise = session
+        .run('CREATE (n:clients {id:{idParam},firstName:{firstNameParam},lastName:{lastNameParam},birthDate:{birthDateParam},email:{emailParam},password:{passwordParam},telephone:{telephoneParam}}) Return n',
+         {idParam:id,firstNameParam:firstName,lastNameParam:lastName,birthDateParam:birthDate,emailParam:email,passwordParam:password,telephoneParam:telephone})
+        
+         resultPromise.then(result => {
+            session.close();
+          
+            const singleRecord = result.records[0];
+            const node = singleRecord.get(0);
+          
+            console.log(node.properties.name);
+          
+            // on application exit:
+            driver.close();
+          });
+    };
+
 
     for(var i = 0; i < mongoOrders.length; i++){
         const order = mongoOrders[i];
@@ -195,8 +252,8 @@ module.exports = async()=>{
                 //console.log("Pto3: R made");
             };
 
-        };
+      };
 
-    };
+    };*/
 
 }
