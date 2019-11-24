@@ -14,7 +14,7 @@ const ordersSchema = new Schema({
     },
     dateTime: {
         type: Date,
-        required: true
+        default: Date.now
     },
     status: {
         type: String,
