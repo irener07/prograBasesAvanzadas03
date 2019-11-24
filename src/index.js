@@ -56,14 +56,5 @@ app.use(require('./routes/sites'));
 app.use(express.static(__dirname + '/public'));
 app.use(router);
 app.listen(config.PORT, ()=> console.log(`Server on port ${config.PORT}`));
-//var result = googleClient.placeDetailsByCoordinates([9.8497821,-83.9489179]);
-//var result = googleClient.searchPlaceByAddress("Walmart Paraiso");
-//var result = googleClient.autocompleteQuery("Walmart Costa Rica");
-//var result = googleClient.nearbyPlaces([9.8497821,-83.9489179],5000,['store']);
-//result.then((res)=>{
-// console.log(res);
-//});
-//googleClient.placeDetailsByCoordinates([9.8497821,-83.9489179]);
-googleClient.distanceBetween([[9.8497821,-83.9489179]],[[9.8642614,-83.9222341]]);
 connectDb();
 migration();

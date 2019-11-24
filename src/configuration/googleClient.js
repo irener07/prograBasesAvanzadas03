@@ -77,8 +77,13 @@ exports.nearbyPlaces = async function(placeLatLng,placeRadius,types){
                     var placeDetails = await googleMapsClient.place({placeid: results[i].place_id}).asPromise();
                     place.placeid = placeDetails.json.result.place_id;
                     place.name = placeDetails.json.result.name;
-                    place.international_phone_number = placeDetails.json.result.international_phone_number;
-                    place.weekday_text = placeDetails.json.result.opening_hours.weekday_text;
+                    place.international_phone_number = placeDetails.json.result.international_phone_number;              
+                    if (placeDetails.json.result.opening_hours.weekday_text!=undefined){
+                        place.weekday_text = placeDetails.json.result.opening_hours.weekday_text;
+                    }
+                    else{
+                        place.weekday_text = "N/A";
+                    }
                     if (placeDetails.json.result.website!=undefined){
                         place.website = placeDetails.json.result.website;
                     }
