@@ -1,0 +1,46 @@
+<div class="row">
+<a href="/clients/possibleSitesToOrder/search" class="btn btn-success btn-block btn-sm">New List of Posible Sites to Order</a>
+
+{{#if listSites}}
+
+
+<div class="row">
+    {{#each listSites}}
+<div class="card-header">
+        <h1>{{supermarketName}}</h1> 
+    </div>
+<table name='products' id='products' class="egt table {
+    border-collapse: separate;
+    border-spacing: 5px;
+    background: #000 url("gradient.gif") bottom left repeat-x;
+    color: #fff;
+ }">  
+    <tr>
+
+    <th scope="row">ID</th>
+    <th>Name</th>
+    <th>Telephone</th>
+    <th>Rating</th>
+    <th>Schedule</th>
+    <th>Web Site</th>
+    <th>Distance</th>
+    <th>Photo</th>
+{{#sites}}
+<tr>
+    <th>{{placeid}}</th>
+    <td>{{name}}</td>
+    <td>{{international_phone_number}}</td>
+    <td>{{rating}}</td>
+    <td>{{weekday_text}}</td>
+    <td>{{website}}</td>
+    <td>{{distance}}</td>
+    <td><img src="{{PhotoUrl}}" width="180" height="100"></td>
+</tr>
+{{/sites}}
+
+</table>
+{{/each}}
+</div>
+ 
+
+{{/if}}

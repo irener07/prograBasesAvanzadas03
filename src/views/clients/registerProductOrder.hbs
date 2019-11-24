@@ -1,0 +1,34 @@
+<div class="row">
+    <div class="card">
+        <div class="card-header">
+            <h1>Register Information</h1> 
+        </div>
+        <input type="text" class="form-control" name="idProduct" placeholder="idProduct" readonly="readonly" value="{{idProduct}}">
+        <div class="card-body">
+            <form action="/clients/registerProductOrder" method='POST'> 
+                <div class="form-group">
+                    <label>Select Status</label>
+                    <select name ="status" id ="status">
+                        <option value="Registered">Registered</option>
+                        <option value="Assigned">Assigned</option>
+                        <option value="On Route">On Route</option>
+                        <option value="Delivered">Delivered</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Quantity</label>
+                    <input type="number" name="quantity" id="quantity" min="1" step="1">
+                </div>
+                <div class="form-group">
+                    <label>Particular Needs</label>
+                    <input type="text" name="particularNeeds" id="particularNeeds" placeholder="Particular Needs">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        Register Order
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -9,17 +9,16 @@ const savesSitesSchema = new Schema({
     idClient: {
         type: Number,
         required: true,
-        unique: true
     },
 
     idSuperMarket: {
-        type: Number,
+        type: String,
         required: true
     },
 
     sites: {
         type: Array,
-        required: true
+        required: false
     }
 });
 

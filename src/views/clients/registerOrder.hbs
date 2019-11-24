@@ -27,12 +27,14 @@
 
 
 {{#if productsSupermarket}}
+
+
 <div class="row">
 
     <div class="card-header">
         <h1>Products</h1> 
     </div>
-<table class="egt table {
+<table name='products' id='products' class="egt table {
     border-collapse: separate;
     border-spacing: 5px;
     background: #000 url("gradient.gif") bottom left repeat-x;
@@ -55,16 +57,16 @@
     <td>${{price}}</td>
     <td><img src="{{img.contentType}}"></td>
     <td>
-        <form action="/supermarkets/registerSupermarket/{{supermarketsFound.placeid}}" method="GET">
-                <button class="btn btn-success btn-block btn-sm" type="submit">
-                    Register
-                </button> 
+        <form action="/clients/registerOrder/confirmed/{{idProduct}}" method="POST">
+            <button class="btn btn-primary btn-block btn-sm" type="submit">
+                Register
+            </button> 
         </form>
     </td>
 </tr>
 
  {{/each}}
 </table>
-
-    {{/if}}
 </div>
+
+{{/if}}

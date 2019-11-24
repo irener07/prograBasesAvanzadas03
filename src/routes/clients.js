@@ -6,6 +6,7 @@ const orders = require('../models/orders');
 const supermarkets = require('../models/supermarkets');
 const products = require('../models/products');
 const dataUserConnected = require('../configuration/connectDB');
+const currentDate = Date.now;
 
 
 router.get('/clients/signUpClients', (req, res) => {
@@ -60,13 +61,76 @@ router.post('/clients/registerOrder', async (req, res) => {
                 console.log(err);
             }
             else{
-                console.log("Exito");
+                console.log("Succesful");
             }
         });
         productsSupermarket[i].img.contentType = path.replace('/','\\');
         paths.push({path:path});
     };
+    dataUserConnected.idSupermarket=superMarket;
     res.render('clients/registerOrder',{superMarkets, productsSupermarket});
+});
+
+router.post('/clients/registerOrder/confirmed/:id', async (req, res) => {
+    const idProduct = req.params.id;
+    dataUserConnected.idProduct=idProduct;
+    res.render('clients/registerProductOrder',{idProduct});
+});
+
+router.post('/clients/registerProductOrder', async (req, res) => {
+    const {status,quantity,particularNeeds} = req.body;
+    const errors=[];
+    if(quantity==''){
+        errors.push({text: 'Please, Insert the Data'});
+    }
+    if(errors.length>0){
+        res.render('/clients/registerOrder/confirmed',{errors, idProduct,status,quantity,particularNeeds});
+    }
+    else{
+        const idProduct=dataUserConnected.idProduct;
+        const idClient = dataUserConnected.idUserConnected;
+        const idSuperMarket = dataUserConnected.idSupermarket;
+        const mark = await orders.findOne({idClient:idClient,idSuperMarket:idSuperMarket});
+        const newProduct = {idProduct, quantity};
+        const superM = await supermarkets.findOne({idSuperMarket:idSuperMarket});
+        var priceP;
+        for(i=0; i<superM.products.length;i++){
+            if(superM.products[i].idProduct==idProduct){
+                priceP=superM.products[i].price;
+                break;
+            }
+        };
+        var newPrice;
+        if (!mark){
+            const idC = await orders.findOne().sort({$natural:-1}).limit(1);
+            var id = 0;
+            if (!idC){
+                id = 1;   
+            }
+            else{   
+                id = idC.id + 1;
+            }
+            var products =[]
+            newPrice = quantity*parseInt(priceP);
+            var totalAmount=newPrice;
+            const newOrder = new orders({id,products,status,particularNeeds,idClient,idSuperMarket,totalAmount});
+            newOrder.products.push(newProduct);
+            await newOrder.save();
+            dataUserConnected.idProduct='';
+            dataUserConnected.idSupermarket='';
+            req.flash('success_msg', 'Successful Registration');
+            res.redirect('/clients/registerOrder');
+        }
+        else{
+            newPrice = parseInt(mark.totalAmount) + quantity*parseInt(priceP);
+            await orders.findOneAndUpdate({idClient:idClient,idSuperMarket:idSuperMarket},{$push:{products: newProduct},totalAmount:newPrice});
+            dataUserConnected.idProduct='';
+            dataUserConnected.idSupermarket='';
+            req.flash('success_msg', 'Successful Registration');
+            res.redirect('/clients/registerOrder');
+
+        }
+    }
 });
 
 module.exports = router;

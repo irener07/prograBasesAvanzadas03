@@ -6,7 +6,7 @@ const session = require('express-session');
 const app = express();
 const router = express.Router();
 const connectDb = require('./configuration/server');
-const connectNeo = require('./configuration/connectNeo');
+const migration = require('./configuration/migration');
 const config = require('./configuration/connectDB');
 const bodyParser = require('body-parser');
 const bodyParserJSON = bodyParser.json();
@@ -20,7 +20,7 @@ module.exports = router;
 app.use(bodyParserJSON);
 app.use(bodyParserURLEncoded);
 
-connectNeo();
+
 
 
 app.set('views', path.join(__dirname, 'views'));
@@ -53,19 +53,12 @@ app.use((req, res, next) => {
 
 app.use(require('./routes/index'));
 app.use(require('./routes/employees'));
+app.use(require('./routes/savedSites'));
 app.use(require('./routes/clients'));
 app.use(require('./routes/supermarkets'));
 app.use(require('./routes/sites'));
 app.use(express.static(__dirname + '/public'));
 app.use(router);
 app.listen(config.PORT, ()=> console.log(`Server on port ${config.PORT}`));
-//var result = googleClient.placeDetailsByCoordinates([9.8497821,-83.9489179]);
-//var result = googleClient.searchPlaceByAddress("Walmart Paraiso");
-//var result = googleClient.autocompleteQuery("Walmart Costa Rica");
-//var result = googleClient.nearbyPlaces([9.8497821,-83.9489179],5000,['store']);
-//result.then((res)=>{
-// console.log(res);
-//});
-//googleClient.placeDetailsByCoordinates([9.8497821,-83.9489179]);
 connectDb();
-
+migration();
