@@ -47,6 +47,7 @@ router.get('/clients/registerOrder', async (req, res) => {
 
 router.post('/clients/registerOrder', async (req, res) => {
     const {superMarket}= req.body;
+    const {superM} = superMarket;
     const superMarkets = await supermarkets.find();
     var productsSupermarket = await supermarkets.findOne({idSuperMarket: superMarket});
     productsSupermarket = await productsSupermarket.products;
@@ -60,13 +61,47 @@ router.post('/clients/registerOrder', async (req, res) => {
                 console.log(err);
             }
             else{
-                console.log("Exito");
+                console.log("Succesful");
             }
         });
         productsSupermarket[i].img.contentType = path.replace('/','\\');
         paths.push({path:path});
     };
-    res.render('clients/registerOrder',{superMarkets, productsSupermarket});
+    res.render('clients/registerOrder',{superMarkets, superM, productsSupermarket});
+});
+
+
+router.post('/clients/registerOrder/confirmed', async (req, res) => {
+    //const {products,superM,status,particularNeeds}= req.body;
+    var jsdom = require('jsdom').JSDOM;
+    await jsdom.fromFile('./src/views/clients/registerOrder.hbs').then(function (dom) {
+    var tableRows = dom.window.document.querySelectorAll("table tr");
+    var array = [];
+    for (var i=1; i<tableRows.length; i++) {
+        var name = tableRows[i].querySelector('th:nth-child(1)').textContent;
+        var country = tableRows[i].querySelector('td:nth-child(6)').textContent;
+        array.push({
+            'idProduct': name,
+            'Amount': country,
+        });
+    }
+    var jsonString = JSON.stringify(array)
+    console.log(jsonString);
+    });
+
+/*     const superMarkets = await supermarkets.find();
+    var productsSupermarket = await supermarkets.findOne({idSuperMarket: superMarket});
+    productsSupermarket = await productsSupermarket.products;
+    var paths = [];
+    for (i=0; i<productsSupermarket.length; i++){
+        var path = 'C:/images/'+i+'.jpeg';
+        var data = productsSupermarket[i].img.data.buffer;
+        var thumb = new Buffer.from(data, 'base64');
+        fs.writeFile(path,thumb);
+        productsSupermarket[i].img.contentType = path.replace('/','\\');
+        paths.push({path:path});
+    };
+    res.render('clients/registerOrder',{superMarkets, productsSupermarket}); */
 });
 
 module.exports = router;

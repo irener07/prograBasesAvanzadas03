@@ -25,14 +25,17 @@
     </div>
 </div>
 
+<input type="text" class="form-control" name="superM" id="superM" readonly="readonly" value='{{superM}}'>
 
 {{#if productsSupermarket}}
+
+
 <div class="row">
 
     <div class="card-header">
         <h1>Products</h1> 
     </div>
-<table class="egt table {
+<table name='products' id='products' class="egt table {
     border-collapse: separate;
     border-spacing: 5px;
     background: #000 url("gradient.gif") bottom left repeat-x;
@@ -45,7 +48,7 @@
     <th>Description</th>
     <th>Price</th>
     <th>Image</th>
-    <th></th>
+    <th>Quantity</th>
 
     {{#each productsSupermarket}}
 <tr>
@@ -54,17 +57,41 @@
     <td>{{description}}</td>
     <td>${{price}}</td>
     <td><img src="{{img.contentType}}"></td>
-    <td>
-        <form action="/supermarkets/registerSupermarket/{{supermarketsFound.placeid}}" method="GET">
-                <button class="btn btn-success btn-block btn-sm" type="submit">
-                    Register
-                </button> 
-        </form>
-    </td>
+    <td><input type="number" name="quantity" id="quantity" min="1" step="1"></td>
 </tr>
 
  {{/each}}
 </table>
-
-    {{/if}}
 </div>
+
+<div class="row">
+    <div class="card">
+        <div class="card-header">
+            <h1>Register Information</h1> 
+        </div>
+        <div class="card-body">
+            <form action="/clients/registerOrder/confirmed" method='POST'> 
+                <div class="form-group">
+                    <label>Select Status</label>
+                    <select name ="status" id ="status">
+                        <option value="Registered">Registered</option>
+                        <option value="Assigned">Assigned</option>
+                        <option value="On Route">On Route</option>
+                        <option value="Delivered">Delivered</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Particular Needs</label>
+                    <input type="text" name="particularNeeds" id="particularNeeds" placeholder="Particular Needs">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        Register Order
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{/if}}
