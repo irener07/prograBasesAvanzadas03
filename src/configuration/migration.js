@@ -82,7 +82,7 @@ module.exports = async()=>{
           });
     };
 
-
+/*
 //Insert orders
     session
         .run('MATCH (n)DETACH DELETE n')
