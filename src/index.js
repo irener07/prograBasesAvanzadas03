@@ -51,6 +51,7 @@ app.use((req, res, next) => {
 
 app.use(require('./routes/index'));
 app.use(require('./routes/employees'));
+app.use(require('./routes/savedSites'));
 app.use(require('./routes/clients'));
 app.use(require('./routes/supermarkets'));
 app.use(require('./routes/sites'));
@@ -65,4 +66,5 @@ app.listen(config.PORT, ()=> console.log(`Server on port ${config.PORT}`));
 // console.log(res);
 //});
 //googleClient.placeDetailsByCoordinates([9.8497821,-83.9489179]);
+googleClient.distanceBetween([[9.8497821,-83.9489179]],[[9.8642614,-83.9222341]]);
 connectDb();

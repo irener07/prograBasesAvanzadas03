@@ -4,12 +4,12 @@
             <h1>Possible Sites to Order</h1> 
         </div>
         <div class="card-body">
-            <form action="/clients/sitesToOrder" method='POST'> 
+            <form action="/clients/possibleSitesToOrder" method='POST'> 
                 <div class="form-group">
                     <label>Select Supermarket</label>
                 </div>
                 <div class="form-group">
-                    <select name ="superMarket" id="superMarket">
+                    <select name ="selectedSuperMarket" id="selectedSuperMarket">
                         {{#each superMarkets}}
                         <option value="{{idSuperMarket}}">{{name}}</option>
                         {{/each}}
@@ -17,19 +17,19 @@
                 </div>
                 <div class="form-group">
                     Select a Type: 
-                    <select name ="siteType" id ="siteType" multiple="multiple">
-                        <option value="Restaurants">Restaurants</option>
-                        <option value="Movies">Movies</option>
-                        <option value="Doctors">Doctors</option>
-                        <option value="Museums">Museums</option>
-                        <option value="Pubs">Pubs</option>      
+                    <select name ="selectedTypes" id ="selectedTypes" multiple="multiple">
+                        <option value="restaurant">Restaurants</option>
+                        <option value="movie_theater">Movies</option>
+                        <option value="doctor">Doctors</option>
+                        <option value="museum">Museums</option>
+                        <option value="bar">Bars</option>      
                     </select>   </br> 
                 </div>
                 <div class="form-group">
-                    <label>Radio:</label>
+                    <label>Radius:</label>
                 </div>
                 <div class="form-group">
-                    <input type="number" min="0" step="1" name="radio">
+                    <input type="number" min="0" step="1" name="selectedRadius">
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-block">
@@ -42,7 +42,6 @@
 </div>
 
 
-{{#if client}}
 <div class="row">
 
     <div class="card-header">
@@ -55,31 +54,32 @@
     color: #fff;
  }">  
     <tr>
-    <th scope="row">ID</th>
-    <th>Firts Name</th>
-    <th>Last Name</th>
-    <th>Birth Date</th>
-    <th>Nacionality</th>
-    <th>Country</th>
-    <th>State</th>
-    <th>Address</th>
-    <th>Email</th>
-    <th>Telephones</th>
+    <th>Image</th>
+    <th>Name</th>
+    <th>Place ID</th>
+    <th>International Phone Number</th>
+    <th>Rating</th>
+    <th>Schedule</th>
+    <th>Website</th>
     </tr>
-
+    {{#each nearByResults}}
     <tr>
-        <td>{{client.id}}</td>
-        <td>{{client.firstName}}</td>
-        <td>{{client.lastName}}</td>
-        <td>{{client.birthDate}}</td>
-        <td>{{client.nationality}}</td>
-        <td>{{client.country}}</td>
-        <td>{{client.state}}</td>
-        <td>{{client.address}}</td>
-        <td>{{client.email}}</td>
-        <td>{{client.telephone}}</td>
+        <td><img src={{PhotoUrl}}></td>
+        <td>{{name}}</td>
+        <td>{{placeid}}</td>
+        <td>{{international_phone_number}}</td>
+        <td>{{rating}}</td>
+        <td>{{weekday_text}}</td>
+        <td>{{website}}</td>
+            <td>
+      <form action="/clients/possibleSitesToOrder/registerSite/{{placeid}}" method="POST">
+        <button class="btn btn-success btn-block btn-sm" type="submit">
+          Add Site
+        </button> 
+      </form>
+    </td>
     </tr>
-    {{/if}}
+    {{/each}}
 </table>
 
 </div>
