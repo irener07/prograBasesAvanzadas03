@@ -19,8 +19,6 @@ module.exports = router;
 app.use(bodyParserJSON);
 app.use(bodyParserURLEncoded);
 
-//connectNeo();
-
 app.set('views', path.join(__dirname, 'views'));
 app.engine('.hbs', exphbs({
   defaultLayout: 'main',
