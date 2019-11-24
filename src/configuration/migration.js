@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-var neo4j = require('neo4j-driver').v1;
-var driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('neo4j', 'Abcd1234'));
-var session = driver.session();
-=======
 const neo4j = require('neo4j-driver').v1;
 const driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('neo4j', 'Abcd1234'));
 const session = driver.session();
->>>>>>> 4ecc83bbc97713640c624eaa004c1a6ec5c79f1a
 
 const clients = require('../models/clients');
 const supermarkets = require('../models/supermarkets');
@@ -14,12 +8,8 @@ const orders = require('../models/orders');
 
 module.exports = async()=>{
 
-<<<<<<< HEAD
-module.exports = async()=>{
-=======
 
     // Insert markets
->>>>>>> 4ecc83bbc97713640c624eaa004c1a6ec5c79f1a
     session
         .run('MATCH (n)DETACH DELETE n')
         .then(function(result){
