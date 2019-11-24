@@ -19,7 +19,7 @@ module.exports = router;
 app.use(bodyParserJSON);
 app.use(bodyParserURLEncoded);
 
-connectNeo();
+//connectNeo();
 
 app.set('views', path.join(__dirname, 'views'));
 app.engine('.hbs', exphbs({
