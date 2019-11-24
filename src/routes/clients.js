@@ -90,7 +90,6 @@ router.post('/clients/registerProductOrder', async (req, res) => {
         const idProduct=dataUserConnected.idProduct;
         const idClient = dataUserConnected.idUserConnected;
         const idSuperMarket = dataUserConnected.idSupermarket;
-        const mark = await orders.findOne({idClient:idClient,idSuperMarket:idSuperMarket});
         const newProduct = {idProduct, quantity};
         const superM = await supermarkets.findOne({idSuperMarket:idSuperMarket});
         var priceP;
@@ -101,35 +100,24 @@ router.post('/clients/registerProductOrder', async (req, res) => {
             }
         };
         var newPrice;
-        if (!mark){
-            const idC = await orders.findOne().sort({$natural:-1}).limit(1);
-            var id = 0;
-            if (!idC){
-                id = 1;   
-            }
-            else{   
-                id = idC.id + 1;
-            }
-            var products =[]
-            newPrice = quantity*parseInt(priceP);
-            var totalAmount=newPrice;
-            const newOrder = new orders({id,products,status,particularNeeds,idClient,idSuperMarket,totalAmount});
-            newOrder.products.push(newProduct);
-            await newOrder.save();
-            dataUserConnected.idProduct='';
-            dataUserConnected.idSupermarket='';
-            req.flash('success_msg', 'Successful Registration');
-            res.redirect('/clients/registerOrder');
+        const idC = await orders.findOne().sort({$natural:-1}).limit(1);
+        var id = 0;
+        if (!idC){
+            id = 1;   
         }
-        else{
-            newPrice = parseInt(mark.totalAmount) + quantity*parseInt(priceP);
-            await orders.findOneAndUpdate({idClient:idClient,idSuperMarket:idSuperMarket},{$push:{products: newProduct},totalAmount:newPrice});
-            dataUserConnected.idProduct='';
-            dataUserConnected.idSupermarket='';
-            req.flash('success_msg', 'Successful Registration');
-            res.redirect('/clients/registerOrder');
-
+        else{   
+            id = idC.id + 1;
         }
+        var products =[]
+        newPrice = quantity*parseInt(priceP);
+        var totalAmount=newPrice;
+        const newOrder = new orders({id,products,status,particularNeeds,idClient,idSuperMarket,totalAmount});
+        newOrder.products.push(newProduct);
+        await newOrder.save();
+        dataUserConnected.idProduct='';
+        dataUserConnected.idSupermarket='';
+        req.flash('success_msg', 'Successful Registration');
+        res.redirect('/clients/registerOrder');
     }
 });
 
