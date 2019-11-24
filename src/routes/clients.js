@@ -73,21 +73,22 @@ router.post('/clients/registerOrder', async (req, res) => {
 
 router.post('/clients/registerOrder/confirmed', async (req, res) => {
     //const {products,superM,status,particularNeeds}= req.body;
-    var jsdom = require('jsdom').JSDOM;
-    await jsdom.fromFile('./src/views/clients/registerOrder.hbs').then(function (dom) {
-    var tableRows = dom.window.document.querySelectorAll("table tr");
-    var array = [];
-    for (var i=1; i<tableRows.length; i++) {
-        var name = tableRows[i].querySelector('th:nth-child(1)').textContent;
-        var country = tableRows[i].querySelector('td:nth-child(6)').textContent;
-        array.push({
-            'idProduct': name,
-            'Amount': country,
-        });
-    }
-    var jsonString = JSON.stringify(array)
-    console.log(jsonString);
+    var scraper = require('table-scraper');
+    scraper
+    .get('C:\\Users\\ronal\\OneDrive\\Escritorio\\PP03BDA\\prograBasesAvanzadas03\\src\\views\\clients\\registerOrder.hbs')
+    .then(function(tableData) {
+    /*
+       tableData === 
+        [ 
+          [ 
+            { State: 'Minnesota', 'Capitol City': 'Saint Paul', 'Pop.': '3' },
+            { State: 'New York', 'Capitol City': 'Albany', 'Pop.': 'Eight Million' } 
+          ] 
+        ]
+    */
+    console.log(tableData);
     });
+
 
 /*     const superMarkets = await supermarkets.find();
     var productsSupermarket = await supermarkets.findOne({idSuperMarket: superMarket});
