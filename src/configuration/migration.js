@@ -35,15 +35,42 @@ module.exports = async()=>{
         var schedule = supermarket.schedule.toString();
         var website = supermarket.website;
 
-        session
+        const resultPromise = session
         .run('CREATE (n:supermarkets{idSuperMarket:{idSuperMarketParam},name:{nameParam},description:{descriptionParam},address:{addressParam},latitude:{latitudeParam},longitude:{longitudeParam},typeSuperMarket:{typeSuperMarketParam},telephone:{telephoneParam},rating:{ratingParam},schedule:{scheduleParam},website:{websiteParam}}) Return n',
          {idSuperMarketParam:idSuperMarket,nameParam:name,descriptionParam:description,addressParam:address,latitudeParam:latitude,longitudeParam:longitude,typeSuperMarketParam:typeSuperMarket,telephoneParam:telephone,ratingParam:rating,scheduleParam:schedule,websiteParam:website})
-        .then(result =>{
-            session.close();                
-        })
-        .catch(function(err){
-            console.log(err);
-        })
+         resultPromise.then(result => {
+            session.close();
+          
+            const singleRecord = result.records[0];
+            const node = singleRecord.get(0);
+          
+            console.log(node.properties.name);
+          });
+
+
+        var products = supermarket.products;
+
+        for(var k = 0; k < products.length; k++){
+            const product = products[k];
+        
+            const idP = product.idProduct.toString();
+            const nameP = product.name;
+            const descriptionP = product.description;
+            //const imageP = product.img;
+            const priceP = product.price;
+      
+            const resultPromise = session
+            .run('CREATE (n:products {idProduct:{idParam},name:{nameParam},description:{descriptionParam},price:{priceParam}}) Return n',
+             {idParam:idP,nameParam:nameP,descriptionParam:descriptionP,priceParam:priceP})
+             resultPromise.then(result => {
+                session.close();
+              
+                const singleRecord = result.records[0];
+                const node = singleRecord.get(0);
+              
+                console.log(node.properties.name);
+              });
+        };
     };
 
     //Insert clients 
@@ -69,7 +96,6 @@ module.exports = async()=>{
             const singleRecord = result.records[0];
             const node = singleRecord.get(0);
           
-            console.log(node.properties.name);
           });
     };
 
@@ -97,162 +123,52 @@ module.exports = async()=>{
             const singleRecord = result.records[0];
             const node = singleRecord.get(0);
           
-            console.log(node.properties.name);
           });
             
 
     };
 
-/*
-//Insert orders
-    session
-        .run('MATCH (n)DETACH DELETE n')
-        .then(function(result){
-            session.close();                
-        })
-        .catch(function(err){
-            console.log(err);
-        })
-
-    const mongoOrders = await orders.find();
-
-    for(var i = 0; i < mongoOrders.length; i++){
-        const order = mongoOrders[i];
-
-     
-        const idOrden = order.id;
-        
-        const date = order.date.toString();
-        const time = order.time.toString();
-        const status = order.status;
-        const particularNeeds = order.particularNeeds;
-        const idClient = order.idClient;
-        const idSuperMarket = order.idSuperMarket;
-        const totalAmount = order.totalAmount.toString();
-
-        const resultPromise = session
-        .run('CREATE (n:orders {idOrden:{idParam},date:{dateParam},status:{statusParam},particularNeeds:{particularNeedsParam},idClient:{idClientParam},idSuperMarket:{idSuperMarketParam},totalAmount:{totalAmountParam}}) Return n',
-         {idParam:idOrden, dateParam:date, timeParam:time, statusParam:status, particularNeedsParam:particularNeeds,idClientParam:idClient,idSuperMarketParam:idSuperMarket, totalAmountParam:totalAmount })
-
-
-         const mongoProductsOrder = order.products();
- 
-         for(var i = 0; i < mongoProductsOrder.length; i++){
-             const product = mongoProductsOrder[i];
-             const idProduct = product.productID;
-             const nameProduct = product.productName;
-             const amountProduct = product.amount;
-
-             const resultPromise = session
-             .run('CREATE (n:products {idProduct:{idParam},name:{nameParam},amount:{amountParam}}) Return n',
-             {idParam:idProduct, nameParam:nameProduct, amountParam:amountProduct })
-                session.close();
-              
-                const singleRecord = result.records[0];
-                const node = singleRecord.get(0);
-              
-                console.log(node.properties.name);
-                            
-
-             const resultPromiseb = session
-             .run('MATCH (a:orders {idOrden:{idOrdenParam}}),(b:products{idProduct:{idProductParam}}) MERGE(b)-[r:LEAVES_FROM]-(a) RETURN a,b', {idProduct:idProduct, idOrder:idProduct})
-             resultPromiseb.then(result => {
-                session.close();
-              
-                const singleRecord = result.records[0];
-                const node = singleRecord.get(0);
-              
-                console.log(node.properties.name);
-            
-              });
-              
-         }
-         resultPromise.then(result => {
-            session.close();
-          
-            const singleRecord = result.records[0];
-            const node = singleRecord.get(0);
-          
-            console.log(node.properties.name);
-    
-          });
-    };
-
-/*
-    //Connection between orders and markets
-
-    for(var i = 0; i < mongoOrders.length; i++){
-        const order = mongoOrders[i];
-        const idOrderCmp= order.idSuperMarket;     
-        for(var j = 0; j < mongoSupermarkets.length; j++){
-            const supermarket = mongoSupermarkets[j];
-            const idSuperMarketCmp = supermarket. idSuperMarket;
-
-            if (idSuperMarketCmp== idOrderCmp){
-                session
-                    .run('MATCH (a:orders {id:{idParam}}),(b:supermarkets {idSuperMarket:{idSuperMarketParam}}) MERGE(a)-[r:LEAVES_FROM]-(b) RETURN a,b', {idSuperMarketParam:idSuperMarketCmp, idParam:idOrderCmp})
-                    .then(function(result){
-                        session.close();                
-                    })
-                    .catch(function(err){
-                        console.log(err);
-                    })
-        
-            };
-
-      };
-
-    };
-
-    
-
-    //Connection betwwen orders and clients
+   // Connection betwwen orders and clients
     for(var i = 0; i < mongoClients.length; i++){
         const client = mongoClients[i];
-        const idClient = client.id;
+        const idCl = client.id;
         
         for(var j = 0; j < mongoOrders.length; j++){
             const order = mongoOrders[j];
             const idOrder = order.idClient;
-    
-
-            if(idOrder==idClient){
-                const comparator = idOrder;
+            if(idOrder==idCl){
                 session
-                    .run('MATCH (a:clients {id:{idParamC}}),(b:orders {id:{idParamO}}) MERGE(a)-[r:ORDER]-(b) RETURN a,b', {idParamC:idClient, idParamO:idOrder})
+                    .run('MATCH (a:clients {id:{idParamC}}),(b:orders {idClient:{idParamO}}) MERGE(a)-[r:orderClient]-(b) RETURN a,b', {idParamC:idCl, idParamO:idOrder})
                     .then(function(result){
-                        //console.log(idUser);
-                        //console.log(idDelivery);
                         session.close();                
                     })
                     .catch(function(err){
                         console.log(err);
                     })
-
-
-                for(var k = 0; k < mongoOrders.length; k++){
-
-                    const idSuperMarketP = order.idSuperMarket[k];
-        
-
-                    if(idSuperMarketP==comparator){
-
-                        session
-                            .run('MATCH (a:supermarkets {id:{idParamM}}),(b:clients {id:{idParamC}}) MERGE(a)-[r:ORDER]-(b) RETURN a,b', {idParamM:comparator, idParamC:comparator})
-                            .then(function(result){
-                                //console.log(idUser);
-                                //console.log(idDelivery);
-                                session.close();                
-                            })
-                            .catch(function(err){
-                                console.log(err);
-                            })
-
-    º              };
-
-                };
             };
         };
     };
-*/
+
+   // Connection betwwen orders and supermarkets
+   for(var i = 0; i < mongoSupermarkets.length; i++){
+    const superM = mongoSupermarkets[i];
+    const idCl = superM.idSuperMarket;
+    
+    for(var j = 0; j < mongoOrders.length; j++){
+        const order = mongoOrders[j];
+        const idOrder = order.idSuperMarket;
+        if(idOrder==idCl){
+            session
+                .run('MATCH (a:supermarkets {idSuperMarket:{idParamC}}),(b:orders {idSuperMarket:{idParamO}}) MERGE(a)-[r:orderSupermarket]-(b) RETURN a,b', {idParamC:idCl, idParamO:idOrder})
+                .then(function(result){
+                    session.close();                
+                })
+                .catch(function(err){
+                    console.log(err);
+                })
+        };
+    };
+};
+
+
 }
