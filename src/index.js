@@ -17,6 +17,7 @@ const googleClient = require('./configuration/googleClient');
 
 module.exports = router;
 
+
 app.use(bodyParserJSON);
 app.use(bodyParserURLEncoded);
 
@@ -46,8 +47,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
 app.use(require('./routes/index'));
 app.use(require('./routes/employees'));
 app.use(require('./routes/savedSites'));
@@ -58,4 +57,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(router);
 app.listen(config.PORT, ()=> console.log(`Server on port ${config.PORT}`));
 connectDb();
-//migration();
+migration();
+
+
+
