@@ -147,7 +147,7 @@ module.exports = async()=>{
         };
     };
 
-   // Connection betwwen orders and supermarkets
+   // Connection between orders and supermarkets
    for(var i = 0; i < mongoSupermarkets.length; i++){
     const superM = mongoSupermarkets[i];
     const idCl = superM.idSuperMarket;

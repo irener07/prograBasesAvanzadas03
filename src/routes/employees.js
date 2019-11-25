@@ -62,22 +62,63 @@ router.get('/employees/query02', async (req, res) => {
 });
 
 router.get('/employees/query03', (req, res) => {
+    migration();
+    var name01,name02,name03,name04,name05;
+    var market01=0, market02=0, market03=0, market04=0,market05=0;
+    var markets = [];
+    var orders = [];
     session
-        .run('MATCH (n: supermarket) RETURN n LIMIT 25')
-        .then(function(result){
-            var personArr = [];
-            result.records.forEach(function(record){
-                personArr.push({
-                    id: record._fields[0].identity.low,
-                    name: record._fields[0].properties.name
-                });
+        .run('MATCH (s:supermarkets) return  LIMIT 25')
+        .then( async function(result){
+            result.records.forEach(async function(record){
+                var nodeA = record.get('m');
+                markets.push(nodeA.end.properties);
             })
-            res.render('AdminViews/graphQuery1View', { persons: personArr})
         })
-        .catch(function(err){
-            console.log(err);
+        session
+        .run('MATCH (o:orders) return  LIMIT 25')
+        .then( async function(result){
+            result.records.forEach(async function(record){
+                var nodeB = record.get('m');
+                orders.push(nodeB.end.properties);
+            })
         })
-    res.render('employees/query03');
+        
+        for(i=0; i<markets.length; i++){
+            var numP=0;
+            for(j=0;j<orders.length;j++){
+                if(markets[i].idSuperMarket==orders[j].idSuperMarket){
+                    numP+=1;
+                }
+            }
+            if(numP>market01 && numP>market02 && numP>market03 && numP>market04 && numP>market05){
+                market01=numP;
+                name01=markets[i].name;
+            }
+
+            if(numP<market01 && numP>market02 && numP>market03 && numP>market04 && numP>market05){
+                market02=numP;
+                name02=markets[i].name;
+            }
+
+            if(numP<market01 && numP<market02 && numP>market03 && numP>market04 && numP>market05){
+                market03=numP;
+                name03=markets[i].name;
+            }
+            if(numP<market01 && numP<market02 && numP<market03 && numP>market04 && numP>market05){
+                market04=numP;
+                name04=markets[i].name;
+            }
+            if(numP<market01 && numP<market02 && numP<market03 && numP<market04 && numP>market05){
+                market05=numP;
+                name05=markets[i].name;
+            }
+
+        }
+        const topS = {name01,name02,name03,name04,name05};
+        res.render('employees/query03', {topS});
+    
+        
 });
 
 module.exports = router;
