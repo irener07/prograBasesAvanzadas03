@@ -10,12 +10,10 @@ router.get('/clients/possibleSitesToOrderModule', async (req,res) =>{
     var listSites = await savedSites.find({idClient:dataUserConnected.idUserConnected});
     const listSupermarkets = await supermarkets.find();
     for (i=0; i<listSites.length;i++){
-        for (j=0; j<listSupermarkets;j++){
+        for (j=0; j<listSupermarkets.length;j++){
             var n = listSites[i].idSuperMarket.localeCompare(listSupermarkets[j].idSuperMarket);
             if(n==0){
-                listSites[i].idSuperMarket = listSupermarkets[j].name;
-                console.log(listSupermarkets[j].name);
-                console.log(listSites[i].idSuperMarket);
+                listSites[i].supermarketName =listSupermarkets[j].name;
             }
         }
     };
