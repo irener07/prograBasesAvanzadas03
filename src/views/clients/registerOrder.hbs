@@ -46,7 +46,6 @@
     <th>Name</th>
     <th>Description</th>
     <th>Price</th>
-    <th>Image</th>
     <th></th>
 
     {{#each productsSupermarket}}
@@ -55,7 +54,6 @@
     <td>{{name}}</td>
     <td>{{description}}</td>
     <td>${{price}}</td>
-    <td><img src="{{img.contentType}}"></td>
     <td>
         <form action="/clients/registerOrder/confirmed/{{idProduct}}" method="POST">
             <button class="btn btn-primary btn-block btn-sm" type="submit">
