@@ -58,4 +58,4 @@ app.use(express.static(__dirname + '/public'));
 app.use(router);
 app.listen(config.PORT, ()=> console.log(`Server on port ${config.PORT}`));
 connectDb();
-migration();
+//migration();

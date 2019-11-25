@@ -8,11 +8,17 @@ const products = require('../models/products');
 const dataUserConnected = require('../configuration/connectDB');
 const currentDate = Date.now;
 
-
+//this route allows to display the signUpClients view
+//Input: view's route
+//Output: the view
+//Restrictions: the view hbs needs to be already created
 router.get('/clients/signUpClients', (req, res) => {
     res.render('clients/signUpClients');
 });
-
+//this route allows to get the data from the sign up form and create a new client in the database
+//Input: id, firstName, lastName, birthDate, email, password, telephone
+//Output: a new client in the database
+//Restrictions: connection to the database
 router.post('/clients/signUpClients', async (req, res) => {
     const {id, firstName, lastName, birthDate, email, password, telephone}= req.body;
     const errors=[];
@@ -36,10 +42,18 @@ router.post('/clients/signUpClients', async (req, res) => {
         res.redirect('/');
     }
 });
+//this route allows to display the clientsModule view
+//Input: view's route
+//Output: the view
+//Restrictions: the view hbs needs to be already created
 
 router.get('/clients/clientsModule', (req, res) => {
     res.render('clients/clientsModule');
 });
+//this route allows to display the registerOrder view
+//Input: view's route
+//Output: the view
+//Restrictions: the view hbs needs to be already created
 
 router.get('/clients/registerOrder', async (req, res) => {
     const superMarkets = await supermarkets.find();
@@ -122,12 +136,41 @@ router.post('/clients/registerProductOrder', async (req, res) => {
 });
 
 
-router.get('/clients/clientsRecord', (req, res) => {
-    res.render('clients/clientsRecord');
+router.get('/clients/clientsRecord', async (req, res) => {
+    const clientId = dataUserConnected.idUserConnected;
+    const errors=[];
+    const order = await orders.findOne({idClient:clientId});
+    if(!order){
+        errors.push({text: 'Please, review the data. There are no orders with these ID'});
+    }
+    if(errors.length>0){
+        res.render('clients/clientsRecord',{errors, clientId});
+    }
+    else{
+        const totalPurchasesR = await orders.find({idClient:clientId});
+        const totalPurchases = totalPurchasesR.length;
+        const ordersFound = await orders.find({idClient:clientId});
+        
+        const ordersRequests = new Array();
+        ordersFound.forEach( (order) =>{
+            const newOrder = {
+                id: order.id,
+                dateTime: order.dateTime,
+                particularNeeds: order.particularNeeds,
+                totalAmount: order.totalAmount
+            }
+            ordersRequests.push(newOrder);
+            
+        });
+        res.render('clients/clientsRecord', {totalPurchases, ordersRequests});
+        
+
+    }
+    
 });
 
-router.post('/clients/clientsRecord', async (req, res) => {
-    const {clientId} = req.body;
+/* router.post('/clients/clientsRecord', async (req, res) => {
+    const clientId = dataUserConnected.idUserConnected;
     const errors=[];
     const order = await orders.findOne({idClient:clientId});
     if(clientId==''){
@@ -147,6 +190,7 @@ router.post('/clients/clientsRecord', async (req, res) => {
         const ordersRequests = new Array();
         ordersFound.forEach( (order) =>{
             const newOrder = {
+                id: order.id,
                 dateTime: order.dateTime,
                 particularNeeds: order.particularNeeds,
                 totalAmount: order.totalAmount
@@ -159,7 +203,7 @@ router.post('/clients/clientsRecord', async (req, res) => {
 
     }
     
-});
+}); */
 
 
 module.exports = router;
