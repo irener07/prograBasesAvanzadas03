@@ -1,0 +1,46 @@
+<div class="row">
+    <div class="card-header">
+        <h1>Supermarkets</h1> 
+    </div>
+<table class="egt table {
+    border-collapse: separate;
+    border-spacing: 5px;
+    background: #000 url("gradient.gif") bottom left repeat-x;
+    color: #fff;
+ }">
+
+  {{#if supermarketsFound}} 
+  <tr>
+    <th scope="row">ID</th>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Address</th>
+    <th>Latitude</th>
+    <th>Longitude</th>
+    <th>Image</th>
+    <th>Telephone</th>
+    <th>Rating</th>
+    <th>Schedule</th>
+    <th>Website</th>
+  </tr>
+  
+    {{#each supermarketsFound}}
+
+  <tr>
+    <th>{{idSuperMarket}}</th>
+    <td>{{name}}</td>
+    <td>{{description}}</td>
+    <td>{{address}}</td>
+    <td>{{latitude}}</td>
+    <td>{{longitude}}</td>
+    <td><img src={{image}} width="180" height="100"></td>
+    <td>{{telephone}}</td>
+    <td>{{rating}}</td>
+    <td>{{schedule}}</td>
+    <td>{{website}}</td>
+  </tr>
+    {{/each}}
+    </table>
+    {{/if}}
+</div>
+
