@@ -41,4 +41,23 @@ router.get('/employees/registerSite', (req, res) => {
     res.render('employees/registerSite');
 });
 
+router.get('/employees/query03', (req, res) => {
+    session
+        .run('MATCH (n: supermarket) RETURN n LIMIT 25')
+        .then(function(result){
+            var personArr = [];
+            result.records.forEach(function(record){
+                personArr.push({
+                    id: record._fields[0].identity.low,
+                    name: record._fields[0].properties.name
+                });
+            })
+            res.render('AdminViews/graphQuery1View', { persons: personArr})
+        })
+        .catch(function(err){
+            console.log(err);
+        })
+    res.render('employees/query03');
+});
+
 module.exports = router;
