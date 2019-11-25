@@ -55,19 +55,11 @@ router.post('/employees/query01', async (req, res) => {
     .then(function(result){
         var ordersFound = [];
         result.records.forEach(function(record){
-            ordersFound.push({
-                idProduct: record._fields[0].properties.idProduct,
-                totalAmount: record._fields[0].properties.totalAmount,
-                idClient: record._fields[0].properties.idClient,
-                dateTime: record._fields[0].properties.dateTime, 
-                particularNeeds: record._fields[0].properties.particularNeeds,
-                idSuperMarket: record._fields[0].properties.idSuperMarket,
-                idOrden: record._fields[0].properties.idOrden,
-                status: record._fields[0].properties.status
-            });
+            ordersFound.push(record._fields[0].properties);
         })
-    })
         res.render('employees/query01',{ordersFound});
+    })
+
 });
 
 router.get('/employees/query02', async (req, res) => {
@@ -92,6 +84,10 @@ router.get('/employees/query02', async (req, res) => {
 router.get('/employees/query04', async (req, res) => {
     migration();
     res.render('employees/query04');
+});
+
+router.get('/employees/query05', async (req, res) => {
+    res.render('employees/query05');
 });
 
 router.post('/employees/query04', async (req, res) => {
