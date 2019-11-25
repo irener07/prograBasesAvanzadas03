@@ -1,0 +1,57 @@
+<div class="row">
+    <div class="card">
+        <div class="card-header">
+            <h1>Search Client and Show Order History</h1> 
+        </div>
+        <div class="card-body">
+            <form action="/employees/query01" method='POST'> 
+                <div class="form-group">
+                    <label>ID Client</label>
+                    <input type="text" name="idClientP" id="idClientP" placeholder="ID Client">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{{#if ordersFound}}
+<div class="row">
+
+    <div class="card-header">
+        <h1>Clients</h1> 
+    </div>
+<table class="egt table {
+    border-collapse: separate;
+    border-spacing: 5px;
+    background: #000 url("gradient.gif") bottom left repeat-x;
+    color: #fff;
+ }">  
+    <tr>
+
+    <th scope="row">ID Order</th>
+    <th>ID Supermarket</th>
+    <th>Date Time</th>
+    <th>Particular Needs</th>
+    <th>Status</th>
+    <th>Total Amount</th>
+
+     {{#each ordersFound}}
+<tr>
+    <th>{{idOrden}}</th>
+    <td>{{idSuperMarket}}</td>
+    <td>{{dateTime}}</td>
+    <td>{{particularNeeds}}</td>
+    <td>{{status}}</td>
+    <td>${{totalAmount}}</td>
+</tr>
+    {{/each}}
+</table>
+
+    {{/if}}
+</div>

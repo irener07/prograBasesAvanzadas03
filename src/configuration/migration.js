@@ -97,7 +97,7 @@ module.exports = async()=>{
           });
     };
 
-
+  
     //Insert orders
     const mongoOrders = await orders.find();
 
@@ -168,5 +168,43 @@ module.exports = async()=>{
     };
 };
 
+ // Connection betwwen orders and products
+// const mongoSupermarketsB = await supermarkets.find();
+// const mongoOrdersB = await orders.find();
+//  for(var a = 0; a < mongoSuperMarketsB.length; a++){
+//     var currentMarket = mongoSupermarketsB[a];
+//     const mongoMarketProducts = currentMarket.products; 
+   
+
+// for(var b = 0; b < mongoOrdersB.length; b++){
+//     const currentOrder = mongoOrders[b];  
+//     const mongoOrderProducts = currentOrder.products;     
+
+
+//  for(var i = 0; i < mongoMarketProducts.length; i++){
+//   const productM = mongoMarketProducts[i];
+//   const idPM = productM.idProduct;
+  
+//   for(var j = 0; j < mongoOrderProducts.length; j++){
+//       const productO = mongoOrderProducts[j];
+//       const idPO = productO.idProduct;
+
+//       if(idPM==idPO){
+//         const resultPromise = session
+//               .run('MATCH (a:products {idProduct:{idParamM}}),(b:orders {idOrden:{idParamO}}) MERGE(a)-[r:orderProduct]-(b) RETURN a,b', {idParamM:idPM, idParamO:idPO})
+//               resultPromise.then(result => {
+//                 session.close();
+              
+//                 const singleRecord = result.records[0];
+//                 const node = singleRecord.get(0);
+              
+//                 console.log(node.properties.name);
+//               });
+//       };
+//   };
+// };
+// };
+// };
 
 }
+

@@ -42,6 +42,26 @@ router.post('/employees/signUpEmployees', async (req, res) => {
         } 
 });
 
+
+router.get('/employees/query01', (req, res) => {
+    res.render('employees/query01');
+});
+
+router.post('/employees/query01', async (req, res) => {
+    migration();
+    const {idClientP} = req.body;
+    session
+    .run('MATCH (c:orders) where c.idClient = "'+idClientP+'" RETURN c LIMIT 25')
+    .then(function(result){
+        var ordersFound = [];
+        result.records.forEach(function(record){
+            ordersFound.push(record._fields[0].properties);
+        })
+        res.render('employees/query01',{ordersFound});
+    })
+
+});
+
 router.get('/employees/query02', async (req, res) => {
     migration();
     session
