@@ -35,15 +35,42 @@ module.exports = async()=>{
         var schedule = supermarket.schedule.toString();
         var website = supermarket.website;
 
-        session
+        const resultPromise = session
         .run('CREATE (n:supermarkets{idSuperMarket:{idSuperMarketParam},name:{nameParam},description:{descriptionParam},address:{addressParam},latitude:{latitudeParam},longitude:{longitudeParam},typeSuperMarket:{typeSuperMarketParam},telephone:{telephoneParam},rating:{ratingParam},schedule:{scheduleParam},website:{websiteParam}}) Return n',
          {idSuperMarketParam:idSuperMarket,nameParam:name,descriptionParam:description,addressParam:address,latitudeParam:latitude,longitudeParam:longitude,typeSuperMarketParam:typeSuperMarket,telephoneParam:telephone,ratingParam:rating,scheduleParam:schedule,websiteParam:website})
-        .then(result =>{
-            session.close();                
-        })
-        .catch(function(err){
-            console.log(err);
-        })
+         resultPromise.then(result => {
+            session.close();
+          
+            const singleRecord = result.records[0];
+            const node = singleRecord.get(0);
+          
+            console.log(node.properties.name);
+          });
+
+
+        var products = supermarket.products;
+
+        for(var k = 0; k < products.length; k++){
+            const product = products[k];
+        
+            const idP = product.idProduct.toString();
+            const nameP = product.name;
+            const descriptionP = product.description;
+            //const imageP = product.img;
+            const priceP = product.price;
+      
+            const resultPromise = session
+            .run('CREATE (n:products {idProduct:{idParam},name:{nameParam},description:{descriptionParam},price:{priceParam}}) Return n',
+             {idParam:idP,nameParam:nameP,descriptionParam:descriptionP,priceParam:priceP})
+             resultPromise.then(result => {
+                session.close();
+              
+                const singleRecord = result.records[0];
+                const node = singleRecord.get(0);
+              
+                console.log(node.properties.name);
+              });
+        };
     };
 
     //Insert clients 
