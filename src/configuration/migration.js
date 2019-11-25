@@ -22,24 +22,23 @@ module.exports = async()=>{
 
     const mongoSupermarkets = await supermarkets.find();
     for(var i = 0; i < mongoSupermarkets.length; i++){
-        const supermarket = mongoSupermarkets[i];
-        const idSuperMarket = supermarket.idSuperMarket;
-        const name = supermarket.name;
-        const description = supermarket.description;
-        const address = supermarket.address;
-        const latitude = supermarket.latitude.toString();
-        const longitude = supermarket.longitude.toString();
-        const typeSuperMarket = supermarket.typeSupermarket;
-        const telephone = supermarket.telephone;
-        const rating = supermarket.rating;
-        const schedule = supermarket.schedule;
-        const website = supermarket.website;
+        var supermarket = mongoSupermarkets[i];
+        var idSuperMarket = supermarket.idSuperMarket;
+        var name = supermarket.name;
+        var description = supermarket.description;
+        var address = supermarket.address;
+        var latitude = supermarket.latitude.toString();
+        var longitude = supermarket.longitude.toString();
+        var typeSuperMarket = supermarket.typeSupermarket.toString();
+        var telephone = supermarket.telephone;
+        var rating = supermarket.rating;
+        var schedule = supermarket.schedule.toString();
+        var website = supermarket.website;
 
-         session
+        session
         .run('CREATE (n:supermarkets{idSuperMarket:{idSuperMarketParam},name:{nameParam},description:{descriptionParam},address:{addressParam},latitude:{latitudeParam},longitude:{longitudeParam},typeSuperMarket:{typeSuperMarketParam},telephone:{telephoneParam},rating:{ratingParam},schedule:{scheduleParam},website:{websiteParam}}) Return n',
          {idSuperMarketParam:idSuperMarket,nameParam:name,descriptionParam:description,addressParam:address,latitudeParam:latitude,longitudeParam:longitude,typeSuperMarketParam:typeSuperMarket,telephoneParam:telephone,ratingParam:rating,scheduleParam:schedule,websiteParam:website})
-        
-         .then(result =>{
+        .then(result =>{
             session.close();                
         })
         .catch(function(err){
@@ -47,15 +46,7 @@ module.exports = async()=>{
         })
     };
 
-    //Insert clients  
-    session
-        .run('MATCH (n)DETACH DELETE n')
-        .then(function(result){
-            session.close();   
-        })
-        .catch(function(err){
-            console.log(err);
-        })
+    //Insert clients 
     const mongoClients = await clients.find();
     for(var i = 0; i < mongoClients.length; i++){
         const client = mongoClients[i];
@@ -80,6 +71,36 @@ module.exports = async()=>{
           
             console.log(node.properties.name);
           });
+    };
+
+
+    //Insert orders
+    const mongoOrders = await orders.find();
+
+    for(var i = 0; i < mongoOrders.length; i++){
+        const order = mongoOrders[i];
+        const idOrden = order.id;
+        const dateTime = order.dateTime.toString();
+        const status = order.status;
+        const particularNeeds = order.particularNeeds;
+        const idClient = order.idClient;
+        const idSuperMarket = order.idSuperMarket;
+        const totalAmount = order.totalAmount.toString();
+        const idProduct = order.products[0].idProduct;
+
+        var resultPromise = session
+        .run('CREATE (n:orders {idOrden:{idParam},dateTime:{dateTimeParam},status:{statusParam},particularNeeds:{particularNeedsParam},idClient:{idClientParam},idSuperMarket:{idSuperMarketParam},totalAmount:{totalAmountParam}, idProduct:{idProductParam}}) Return n',
+         {idParam:idOrden, dateTimeParam:dateTime, statusParam:status, particularNeedsParam:particularNeeds,idClientParam:idClient,idSuperMarketParam:idSuperMarket, totalAmountParam:totalAmount, idProductParam: idProduct})
+         resultPromise.then(result => {
+            session.close();
+          
+            const singleRecord = result.records[0];
+            const node = singleRecord.get(0);
+          
+            console.log(node.properties.name);
+          });
+            
+
     };
 
 /*
