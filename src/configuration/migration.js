@@ -44,7 +44,6 @@ module.exports = async()=>{
             const singleRecord = result.records[0];
             const node = singleRecord.get(0);
           
-            console.log(node.properties.name);
           });
 
 
@@ -68,7 +67,6 @@ module.exports = async()=>{
                 const singleRecord = result.records[0];
                 const node = singleRecord.get(0);
               
-                console.log(node.properties.name);
               });
         };
     };
