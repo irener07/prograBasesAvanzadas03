@@ -6,6 +6,7 @@ const clients = require('../models/clients');
 const supermarkets = require('../models/supermarkets');
 const orders = require('../models/orders');
 
+
 module.exports = async()=>{
 
 
@@ -39,23 +40,18 @@ module.exports = async()=>{
          {idSuperMarketParam:idSuperMarket,nameParam:name,descriptionParam:description,addressParam:address,latitudeParam:latitude,longitudeParam:longitude,typeSuperMarketParam:typeSuperMarket,telephoneParam:telephone,ratingParam:rating,scheduleParam:schedule,websiteParam:website})
         
          .then(result =>{
-            session.close();   
-          
-            // on application exit:
-            driver.close();             
+            session.close();                
         })
         .catch(function(err){
             console.log(err);
         })
     };
 
-    //Insert clients
+    //Insert clients  
     session
         .run('MATCH (n)DETACH DELETE n')
         .then(function(result){
             session.close();   
-
-                       
         })
         .catch(function(err){
             console.log(err);
@@ -63,7 +59,7 @@ module.exports = async()=>{
     const mongoClients = await clients.find();
     for(var i = 0; i < mongoClients.length; i++){
         const client = mongoClients[i];
-        //console.log(client);
+    
         const id = client.id;
         const firstName = client.firstName;
         const lastName = client.lastName;
@@ -83,13 +79,10 @@ module.exports = async()=>{
             const node = singleRecord.get(0);
           
             console.log(node.properties.name);
-          
-            // on application exit:
-            driver.close();
           });
     };
 
-
+/*
 //Insert orders
     session
         .run('MATCH (n)DETACH DELETE n')
@@ -107,7 +100,7 @@ module.exports = async()=>{
 
      
         const idOrden = order.id;
-        //console.log(date);
+        
         const date = order.date.toString();
         const time = order.time.toString();
         const status = order.status;
@@ -138,11 +131,8 @@ module.exports = async()=>{
                 const node = singleRecord.get(0);
               
                 console.log(node.properties.name);
-              
-                // on application exit:
-                driver.close();
-              
-             
+                            
+
              const resultPromiseb = session
              .run('MATCH (a:orders {idOrden:{idOrdenParam}}),(b:products{idProduct:{idProductParam}}) MERGE(b)-[r:LEAVES_FROM]-(a) RETURN a,b', {idProduct:idProduct, idOrder:idProduct})
              resultPromiseb.then(result => {
@@ -152,9 +142,7 @@ module.exports = async()=>{
                 const node = singleRecord.get(0);
               
                 console.log(node.properties.name);
-              
-                // on application exit:
-                driver.close();
+            
               });
               
          }
@@ -165,13 +153,11 @@ module.exports = async()=>{
             const node = singleRecord.get(0);
           
             console.log(node.properties.name);
-          
-            // on application exit:
-            driver.close();
+    
           });
     };
 
-
+/*
     //Connection between orders and markets
 
     for(var i = 0; i < mongoOrders.length; i++){
@@ -200,7 +186,6 @@ module.exports = async()=>{
     
 
     //Connection betwwen orders and clients
-
     for(var i = 0; i < mongoClients.length; i++){
         const client = mongoClients[i];
         const idClient = client.id;
@@ -242,12 +227,11 @@ module.exports = async()=>{
                                 console.log(err);
                             })
 
-                    };
+    º              };
 
                 };
             };
         };
     };
-
-
+*/
 }
