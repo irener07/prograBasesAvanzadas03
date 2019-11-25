@@ -5,6 +5,7 @@ const products = require('../models/products');
 const googleClient = require('../configuration/googleClient');
 const router = express.Router();
 
+
 router.get('/supermarkets/createSupermarket', (req, res) => {
     res.render('supermarkets/createSupermarket');
 });
