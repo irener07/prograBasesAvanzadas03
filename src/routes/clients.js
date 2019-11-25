@@ -169,41 +169,5 @@ router.get('/clients/clientsRecord', async (req, res) => {
     
 });
 
-/* router.post('/clients/clientsRecord', async (req, res) => {
-    const clientId = dataUserConnected.idUserConnected;
-    const errors=[];
-    const order = await orders.findOne({idClient:clientId});
-    if(clientId==''){
-        errors.push({text: 'Please, Insert the Data Required'});
-    }
-    if(!order){
-        errors.push({text: 'Please, review the data. There are no orders with these ID'});
-    }
-    if(errors.length>0){
-        res.render('clients/clientsRecord',{errors, clientId});
-    }
-    else{
-        const totalPurchasesR = await orders.find({idClient:clientId});
-        const totalPurchases = totalPurchasesR.length;
-        const ordersFound = await orders.find({idClient:clientId});
-        
-        const ordersRequests = new Array();
-        ordersFound.forEach( (order) =>{
-            const newOrder = {
-                id: order.id,
-                dateTime: order.dateTime,
-                particularNeeds: order.particularNeeds,
-                totalAmount: order.totalAmount
-            }
-            ordersRequests.push(newOrder);
-            
-        });
-        res.render('clients/clientsRecord', {totalPurchases, ordersRequests});
-        return;
-
-    }
-    
-}); */
-
 
 module.exports = router;

@@ -88,57 +88,122 @@ router.get('/employees/query03', (req, res) => {
     var markets = [];
     var orders = [];
     session
-        .run('MATCH (s:supermarkets) return  LIMIT 25')
+        .run('MATCH (s:supermarkets) return s LIMIT 25')
         .then( async function(result){
             result.records.forEach(async function(record){
-                var nodeA = record.get('m');
-                markets.push(nodeA.end.properties);
+                var nodeA = record.get('s');
+                markets.push(nodeA.properties);
             })
         })
         session
-        .run('MATCH (o:orders) return  LIMIT 25')
+        .run('MATCH (o:orders) return o LIMIT 25')
         .then( async function(result){
             result.records.forEach(async function(record){
-                var nodeB = record.get('m');
-                orders.push(nodeB.end.properties);
+                var nodeB = record.get('o');
+                orders.push(nodeB.properties);
+            })
+            for(i=0; i<markets.length; i++){
+                var numP=0;
+                for(j=0;j<orders.length;j++){
+                    if(markets[i].idSuperMarket==orders[j].idSuperMarket){
+                        numP+=1;
+                    }
+                }
+                if(numP>market01 && numP>market02 && numP>market03 && numP>market04 && numP>market05){
+                    market01=numP;
+                    name01=markets[i].name;
+                }
+    
+                if(numP<market01 && numP>market02 && numP>market03 && numP>market04 && numP>market05){
+                    market02=numP;
+                    name02=markets[i].name;
+                }
+    
+                if(numP<market01 && numP<market02 && numP>market03 && numP>market04 && numP>market05){
+                    market03=numP;
+                    name03=markets[i].name;
+                }
+                if(numP<market01 && numP<market02 && numP<market03 && numP>market04 && numP>market05){
+                    market04=numP;
+                    name04=markets[i].name;
+                }
+                if(numP<market01 && numP<market02 && numP<market03 && numP<market04 && numP>market05){
+                    market05=numP;
+                    name05=markets[i].name;
+                }
+    
+            }
+            const topS = {name01,name02,name03,name04,name05};
+            res.render('employees/query03', {topS});  
+        })
+       
+});
+
+router.get('/employees/query04', async (req, res) => {
+    migration();
+    res.render('employees/query04');
+});
+
+router.post('/employees/query04', async (req, res) => {
+    const {client}= req.body;
+    session
+    .run('MATCH p=({id:{idParam}})-[r:orderClient]->() RETURN p LIMIT 25',{idParam: client })
+    .then( async function(result){
+        var superMar = [];
+        result.records.forEach( async function(record) {
+            var nodeA = record.get('p');
+            superMar.push(nodeA.end.properties.idSuperMarket);
+        })
+        session
+        .run('MATCH (n:orders) RETURN n LIMIT 25',)
+        .then( async function(result){
+            var orders = [];
+            result.records.forEach( async function(record) {
+                var nodeB = record.get('n');
+                orders.push(nodeB.properties);
+            })
+            session
+            .run('MATCH (m:clients) RETURN m LIMIT 25',)
+            .then( async function(result){
+                var clients = [];
+                result.records.forEach( async function(record) {
+                    var nodeC = record.get('m');
+                    clients.push(nodeC.properties);
+                })
+                var clientsFound = [];
+                for (i=0; i<superMar.length;i++){
+                    for(j=0; j<orders.length;j++){
+                        if(superMar[i]==orders[j].idSuperMarket && orders[j].idClient!=client){
+                            for(n=0; n<clients.length;n++){
+                                if(orders[j].idClient==clients[n].id){
+                                    clientsFound.push(clients[n]);
+                                }
+                            }
+                        }
+                    }
+                }
+                for(var l=0;l<clientsFound.length;l++){
+                    for(var n=0;n<clientsFound.length;n++){
+                        if(clientsFound[l]!=undefined && clientsFound[n]!=undefined && clientsFound[n].id==clientsFound[l].id){
+                            if(n!=l){
+                                delete clientsFound[n];
+                            }
+                        }
+                    }
+                }
+                res.render('employees/query04',{clientsFound});
+            })
+            .catch(function(err){
+                console.log(err);
             })
         })
-        
-        for(i=0; i<markets.length; i++){
-            var numP=0;
-            for(j=0;j<orders.length;j++){
-                if(markets[i].idSuperMarket==orders[j].idSuperMarket){
-                    numP+=1;
-                }
-            }
-            if(numP>market01 && numP>market02 && numP>market03 && numP>market04 && numP>market05){
-                market01=numP;
-                name01=markets[i].name;
-            }
-
-            if(numP<market01 && numP>market02 && numP>market03 && numP>market04 && numP>market05){
-                market02=numP;
-                name02=markets[i].name;
-            }
-
-            if(numP<market01 && numP<market02 && numP>market03 && numP>market04 && numP>market05){
-                market03=numP;
-                name03=markets[i].name;
-            }
-            if(numP<market01 && numP<market02 && numP<market03 && numP>market04 && numP>market05){
-                market04=numP;
-                name04=markets[i].name;
-            }
-            if(numP<market01 && numP<market02 && numP<market03 && numP<market04 && numP>market05){
-                market05=numP;
-                name05=markets[i].name;
-            }
-
-        }
-        const topS = {name01,name02,name03,name04,name05};
-        res.render('employees/query03', {topS});
-    
-        
+        .catch(function(err){
+            console.log(err);
+        })
+    })
+    .catch(function(err){
+        console.log(err);
+    })
 });
 
 module.exports = router;
