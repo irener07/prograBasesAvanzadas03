@@ -42,6 +42,33 @@ router.post('/employees/signUpEmployees', async (req, res) => {
         } 
 });
 
+router.get('/employees/query01', (req, res) => {
+    res.render('employees/query01');
+});
+
+router.post('/employees/query01', async (req, res) => {
+    migration();
+    const {idClientP} = req.body;
+    session
+    .run('MATCH (c:orders) where c.idClient = "'+idClientP+'" RETURN c LIMIT 25')
+    .then(function(result){
+        var ordersFound = [];
+        result.records.forEach(function(record){
+            ordersFound.push({
+                idProduct: record._fields[0].properties.idProduct,
+                totalAmount: record._fields[0].properties.totalAmount,
+                idClient: record._fields[0].properties.idClient,
+                dateTime: record._fields[0].properties.dateTime, 
+                particularNeeds: record._fields[0].properties.particularNeeds,
+                idSuperMarket: record._fields[0].properties.idSuperMarket,
+                idOrden: record._fields[0].properties.idOrden,
+                status: record._fields[0].properties.status
+            });
+        })
+    })
+        res.render('employees/query01',{ordersFound});
+});
+
 router.get('/employees/query02', async (req, res) => {
     migration();
     session
@@ -63,34 +90,10 @@ router.get('/employees/query02', async (req, res) => {
 
 
 
-
 router.get('/employees/employeesModule', (req, res) => {
     res.render('employees/employeesModule');
 });
 
-
-router.post('/employees/employeesModule', async (req,res) =>{
-    var idClient = req.body._id;
-    session
-    .run('MATCH (c:orders) where c.idClient = "'+idClient+'" return c')
-    .then(function(result){
-        var ordersFound = [];
-        result.records.forEach(function(record){
-            ordersFound.push({
-                idProduct: record._fields[0].properties.idProduct,
-                totalAmount: record._fields[0].properties.totalAmount,
-                idClient: record._fields[0].properties.idClient,
-                dateTime: record._fields[0].properties.dateTime, 
-                particularNeeds: record._fields[0].properties.particularNeeds,
-                idSuperMarket: record._fields[0].properties.idSuperMarket,
-                idOrden: record._fields[0].properties.idOrden,
-                status: record._fields[0].properties.status
-            });
-        })
-        res.render('query01',{
-            ordersFound
-        })
-    }
-)});
-
 module.exports = router;
+
+
